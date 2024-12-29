@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Top Recipes</h2>
+<div class="row mb-4">
+    {% for recipe in top_recipes %}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="position-relative">
+                <i class="fas fa-star position-absolute top-0 start-0 m-2 text-warning"></i>
+                <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ recipe.title }}</h5>
+                <p class="card-text">
+                    <i class="fas fa-clock"></i> {{ recipe.preparation_time }} mins |
+                    <i class="fas fa-eye"></i> {{ recipe.views }} views |
+                    <i class="fas fa-calendar"></i> {{ recipe.date_posted.strftime('%B %d, %Y') }}
+                </p>
+                <a href="{{ url_for('recipe', recipe_id=recipe.id) }}" class="btn btn-primary">View Recipe</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<h2>All Recipes</h2>
+<div class="row">
+    {% for recipe in all_recipes %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <div class="position-relative">
+                {% if recipe.has_been_top %}
+                <i class="fas fa-star position-absolute top-0 start-0 m-2 text-warning"></i>
+                {% endif %}
+                <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ recipe.title }}</h5>
+                <p class="card-text">
+                    <i class="fas fa-clock"></i> {{ recipe.preparation_time }} mins |
+                    <i class="fas fa-eye"></i> {{ recipe.views }} views |
+                    <i class="fas fa-calendar"></i> {{ recipe.date_posted.strftime('%B %d, %Y') }}
+                </p>
+                <a href="{{ url_for('recipe', recipe_id=recipe.id) }}" class="btn btn-primary">View Recipe</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

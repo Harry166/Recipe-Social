@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    {% if query %}
+        <h2>Search Results for "{{ query }}"</h2>
+        {% if recipes %}
+            <div class="row">
+                {% for recipe in recipes %}
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" 
+                             class="card-img-top" alt="{{ recipe.title }}" 
+                             style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ recipe.title }}</h5>
+                            <p class="card-text">
+                                <i class="fas fa-clock"></i> {{ recipe.preparation_time }} mins |
+                                <i class="fas fa-eye"></i> {{ recipe.views }} views |
+                                <i class="fas fa-calendar"></i> {{ recipe.date_posted.strftime('%B %d, %Y') }}
+                            </p>
+                            <a href="{{ url_for('recipe', recipe_id=recipe.id) }}" 
+                               class="btn btn-primary">View Recipe</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                No recipes found matching "{{ query }}"
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="alert alert-info">
+            Please enter a search term
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
