@@ -65,7 +65,11 @@ def allowed_file(filename):
 
 @app.route('/')
 def home():
-    top_recipes = Recipe.query.order_by(Recipe.views.desc()).limit(3).all()
+    # Query recipes and order by number of likes
+    top_recipes = Recipe.query.join(likes).group_by(Recipe.id)\
+        .order_by(db.func.count(likes.c.user_id).desc())\
+        .limit(3).all()
+    
     # Mark current top recipes
     for recipe in top_recipes:
         if not recipe.has_been_top:
