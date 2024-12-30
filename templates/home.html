@@ -8,7 +8,13 @@
         <div class="card">
             <div class="position-relative">
                 <i class="fas fa-star position-absolute top-0 start-0 m-2 text-warning"></i>
-                <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                {% if recipe.image_file != 'default.jpg' %}
+                    <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                        <span class="text-muted">No thumbnail available</span>
+                    </div>
+                {% endif %}
             </div>
             <div class="card-body">
                 <h5 class="card-title">{{ recipe.title }}</h5>
@@ -41,7 +47,13 @@
                 {% if recipe.has_been_top %}
                 <i class="fas fa-star position-absolute top-0 start-0 m-2 text-warning"></i>
                 {% endif %}
-                <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                {% if recipe.image_file != 'default.jpg' %}
+                    <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                        <span class="text-muted">No thumbnail available</span>
+                    </div>
+                {% endif %}
             </div>
             <div class="card-body">
                 <h5 class="card-title">{{ recipe.title }}</h5>

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2>Setup Your Profile</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="profile_pic" class="form-label">Profile Picture (Max 500x500)</label>
+                    <input type="file" class="form-control" id="profile_pic" 
+                           name="profile_pic" accept="image/*" {% if not current_user.profile_pic %}required{% endif %}>
+                    <div class="form-text">Please choose a square image for best results.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="bio" class="form-label">Bio</label>
+                    <textarea class="form-control" id="bio" name="bio" 
+                              rows="3" placeholder="Tell us about yourself...">{{ current_user.bio }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Save Profile</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('profile_pic').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const img = new Image();
+        img.onload = function() {
+            if (this.width > 500 || this.height > 500) {
+                alert('Image dimensions must not exceed 500x500 pixels');
+                e.target.value = '';
+            }
+        }
+        img.src = URL.createObjectURL(file);
+    }
+});
+</script>
+{% endblock %}

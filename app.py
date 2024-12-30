@@ -5,6 +5,8 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
+from PIL import Image
+import io
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
@@ -29,9 +31,24 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
+    profile_pic = db.Column(db.String(100), default='default_profile.jpg')
+    bio = db.Column(db.Text, default='')
     recipes = db.relationship('Recipe', backref='author', lazy=True)
     liked_recipes = db.relationship('Recipe', secondary=likes, 
                                   backref=db.backref('liked_by', lazy='dynamic'))
+
+    def save_profile_pic(self, picture_data):
+        # Resize and save profile picture
+        img = Image.open(picture_data)
+        if img.height > 500 or img.width > 500:
+            output_size = (500, 500)
+            img.thumbnail(output_size)
+        
+        # Save the image
+        filename = secure_filename(f'profile_{self.username}.jpg')
+        img_path = os.path.join(app.config['UPLOAD_FOLDER'], 'profiles', filename)
+        img.save(img_path)
+        return filename
 
     def like_recipe(self, recipe):
         if not self.has_liked_recipe(recipe):
@@ -87,12 +104,22 @@ def register():
         email = request.form['email']
         password = request.form['password']
         
+        # Check if username or email already exists
+        if User.query.filter_by(username=username).first():
+            flash('Username already exists. Please choose a different one.', 'error')
+            return render_template('register.html')
+        
+        if User.query.filter_by(email=email).first():
+            flash('Email already registered. Please use a different email.', 'error')
+            return render_template('register.html')
+        
         user = User(username=username, 
                    email=email, 
                    password=generate_password_hash(password))
         db.session.add(user)
         db.session.commit()
-        return redirect(url_for('login'))
+        login_user(user)
+        return redirect(url_for('setup_profile'))
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -174,6 +201,26 @@ def unlike_recipe(recipe_id):
     current_user.unlike_recipe(recipe)
     db.session.commit()
     return jsonify({'likes': len(recipe.liked_by.all())})
+
+@app.route('/profile/<username>')
+def profile(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    return render_template('profile.html', user=user)
+
+@app.route('/setup_profile', methods=['GET', 'POST'])
+@login_required
+def setup_profile():
+    if request.method == 'POST':
+        if 'profile_pic' in request.files:
+            file = request.files['profile_pic']
+            if file and allowed_file(file.filename):
+                filename = current_user.save_profile_pic(file)
+                current_user.profile_pic = filename
+        
+        current_user.bio = request.form.get('bio', '')
+        db.session.commit()
+        return redirect(url_for('profile', username=current_user.username))
+    return render_template('setup_profile.html')
 
 if __name__ == '__main__':
     if not os.path.exists('static/uploads'):

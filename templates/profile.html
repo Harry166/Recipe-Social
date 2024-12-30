@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                {% if user.profile_pic != 'default_profile.jpg' %}
+                    <img src="{{ url_for('static', filename='uploads/profiles/' + user.profile_pic) }}" 
+                         class="card-img-top rounded-circle p-3" alt="Profile Picture">
+                {% else %}
+                    <i class="fas fa-user-circle text-center mt-4" style="font-size: 150px;"></i>
+                {% endif %}
+                <div class="card-body">
+                    <h3 class="card-title text-center">{{ user.username }}</h3>
+                    {% if user.bio %}
+                        <p class="card-text">{{ user.bio }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <h4>Liked Recipes</h4>
+            {% if user.liked_recipes %}
+                <div class="row">
+                    {% for recipe in user.liked_recipes %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            {% if recipe.image_file != 'default.jpg' %}
+                                <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" 
+                                     class="card-img-top" alt="{{ recipe.title }}" 
+                                     style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <div class="card-img-top d-flex align-items-center justify-content-center bg-light" 
+                                     style="height: 200px;">
+                                    <span class="text-muted">No thumbnail available</span>
+                                </div>
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ recipe.title }}</h5>
+                                <p class="card-text small">
+                                    <i class="fas fa-heart text-danger"></i> {{ recipe.liked_by.count() }}
+                                </p>
+                                <a href="{{ url_for('recipe', recipe_id=recipe.id) }}" 
+                                   class="btn btn-primary">View Recipe</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">No Liked Recipes :)</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
