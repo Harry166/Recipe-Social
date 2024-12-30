@@ -316,5 +316,42 @@
         });
     });
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const isAuthenticated = JSON.parse("{{ 'true' if current_user.is_authenticated else 'false' }}");
+        
+        document.querySelectorAll('.follow-button').forEach(button => {
+            button.addEventListener('click', function() {
+                if (!isAuthenticated) {
+                    window.location.href = "{{ url_for('login') }}";
+                    return;
+                }
+
+                const username = this.dataset.username;
+                const btn = this.querySelector('button');
+                const isFollowing = btn.classList.contains('btn-danger');
+                
+                fetch(`/${isFollowing ? 'unfollow' : 'follow'}/${username}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    btn.classList.toggle('btn-primary');
+                    btn.classList.toggle('btn-danger');
+                    btn.textContent = data.is_following ? 'Unfollow' : 'Follow';
+                    
+                    // Update all follower counts for this user on the page
+                    document.querySelectorAll('.followers-count').forEach(count => {
+                        count.textContent = data.followers_count;
+                    });
+                });
+            });
+        });
+    });
+    </script>
 </body>
 </html>

@@ -25,6 +25,12 @@ likes = db.Table('likes',
     db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True)
 )
 
+# Add after likes table
+followers = db.Table('followers',
+    db.Column('follower_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
+)
+
 # Models
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,6 +42,13 @@ class User(UserMixin, db.Model):
     recipes = db.relationship('Recipe', backref='author', lazy=True)
     liked_recipes = db.relationship('Recipe', secondary=likes, 
                                   backref=db.backref('liked_by', lazy='dynamic'))
+    followers = db.relationship(
+        'User', secondary=followers,
+        primaryjoin=(followers.c.follower_id == id),
+        secondaryjoin=(followers.c.followed_id == id),
+        backref=db.backref('following', lazy='dynamic'),
+        lazy='dynamic'
+    )
 
     def save_profile_pic(self, picture_data):
         # Resize and save profile picture
@@ -60,6 +73,17 @@ class User(UserMixin, db.Model):
 
     def has_liked_recipe(self, recipe):
         return recipe in self.liked_recipes
+
+    def follow(self, user):
+        if not self.is_following(user):
+            self.following.append(user)
+
+    def unfollow(self, user):
+        if self.is_following(user):
+            self.following.remove(user)
+
+    def is_following(self, user):
+        return self.following.filter(followers.c.followed_id == user.id).count() > 0
 
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -136,6 +160,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash('You have been logged out.', 'success')
     return redirect(url_for('home'))
 
 @app.route('/recipe/new', methods=['GET', 'POST'])
@@ -205,7 +230,9 @@ def unlike_recipe(recipe_id):
 @app.route('/profile/<username>')
 def profile(username):
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('profile.html', user=user)
+    # Get user's recipes
+    recipes = Recipe.query.filter_by(author=user).order_by(Recipe.date_posted.desc()).all()
+    return render_template('profile.html', user=user, recipes=recipes)
 
 @app.route('/setup_profile', methods=['GET', 'POST'])
 @login_required
@@ -221,6 +248,30 @@ def setup_profile():
         db.session.commit()
         return redirect(url_for('profile', username=current_user.username))
     return render_template('setup_profile.html')
+
+@app.route('/follow/<username>', methods=['POST'])
+@login_required
+def follow(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    if user != current_user and not current_user.is_following(user):
+        current_user.follow(user)
+        db.session.commit()
+    return jsonify({
+        'followers_count': user.followers.count(),
+        'is_following': True
+    })
+
+@app.route('/unfollow/<username>', methods=['POST'])
+@login_required
+def unfollow(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    if user != current_user and current_user.is_following(user):
+        current_user.unfollow(user)
+        db.session.commit()
+    return jsonify({
+        'followers_count': user.followers.count(),
+        'is_following': False
+    })
 
 if __name__ == '__main__':
     if not os.path.exists('static/uploads'):
