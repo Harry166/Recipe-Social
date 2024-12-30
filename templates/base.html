@@ -223,6 +223,23 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             white-space: pre-wrap;
         }
+
+        .like-button {
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .like-button:hover {
+            transform: scale(1.2);
+        }
+
+        .fa-heart {
+            transition: all 0.3s;
+        }
+
+        .text-danger {
+            color: #ff6b6b !important;
+        }
     </style>
 </head>
 <body>
@@ -263,5 +280,38 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const isAuthenticated = JSON.parse("{{ 'true' if current_user.is_authenticated else 'false' }}");
+        
+        document.querySelectorAll('.like-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                if (!isAuthenticated) {
+                    window.location.href = "{{ url_for('login') }}";
+                    return;
+                }
+
+                const recipeId = this.dataset.recipeId;
+                const icon = this.querySelector('i');
+                const likesCount = this.nextElementSibling;
+                const isLiked = icon.classList.contains('fas');
+                
+                fetch(`/${isLiked ? 'unlike' : 'like'}/${recipeId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    icon.classList.toggle('fas');
+                    icon.classList.toggle('far');
+                    icon.classList.toggle('text-danger');
+                    likesCount.textContent = data.likes;
+                });
+            });
+        });
+    });
+    </script>
 </body>
 </html>

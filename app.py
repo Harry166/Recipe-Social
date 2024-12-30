@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from datetime import datetime
@@ -17,6 +17,12 @@ login_manager.login_view = 'login'
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+# Define likes table first
+likes = db.Table('likes',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('recipe_id', db.Integer, db.ForeignKey('recipe.id'), primary_key=True)
+)
+
 # Models
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +30,19 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
     recipes = db.relationship('Recipe', backref='author', lazy=True)
+    liked_recipes = db.relationship('Recipe', secondary=likes, 
+                                  backref=db.backref('liked_by', lazy='dynamic'))
+
+    def like_recipe(self, recipe):
+        if not self.has_liked_recipe(recipe):
+            self.liked_recipes.append(recipe)
+
+    def unlike_recipe(self, recipe):
+        if self.has_liked_recipe(recipe):
+            self.liked_recipes.remove(recipe)
+
+    def has_liked_recipe(self, recipe):
+        return recipe in self.liked_recipes
 
 class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -135,6 +154,22 @@ def search():
         search_results = []
     
     return render_template('search.html', recipes=search_results, query=query)
+
+@app.route('/like/<int:recipe_id>', methods=['POST'])
+@login_required
+def like_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    current_user.like_recipe(recipe)
+    db.session.commit()
+    return jsonify({'likes': len(recipe.liked_by.all())})
+
+@app.route('/unlike/<int:recipe_id>', methods=['POST'])
+@login_required
+def unlike_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    current_user.unlike_recipe(recipe)
+    db.session.commit()
+    return jsonify({'likes': len(recipe.liked_by.all())})
 
 if __name__ == '__main__':
     if not os.path.exists('static/uploads'):
