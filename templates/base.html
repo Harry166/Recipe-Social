@@ -240,6 +240,31 @@
         .text-danger {
             color: #ff6b6b !important;
         }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+            padding: 10px 0;
+            box-shadow: 0 -2px 15px rgba(0,0,0,0.1);
+        }
+
+        .footer a {
+            color: white !important;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+
+        .footer a:hover {
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        /* Add margin to main content to prevent footer overlap */
+        .container {
+            margin-bottom: 60px;
+        }
     </style>
 </head>
 <body>
@@ -361,5 +386,12 @@
         });
     });
     </script>
+
+    <!-- Add this before the closing body tag -->
+    <footer class="footer mt-auto py-3 bg-dark">
+        <div class="container text-center">
+            <a href="{{ url_for('about') }}" class="text-light text-decoration-none">About</a>
+        </div>
+    </footer>
 </body>
 </html>
