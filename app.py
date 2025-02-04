@@ -11,7 +11,20 @@ import io
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///recipes.db'
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+
+# Update your upload folder configuration
+if os.environ.get('RENDER'):
+    # For Render.com deployment
+    UPLOAD_FOLDER = '/tmp/uploads'
+    PROFILE_UPLOAD_FOLDER = '/tmp/uploads/profiles'
+else:
+    # For local development
+    UPLOAD_FOLDER = 'static/uploads'
+    PROFILE_UPLOAD_FOLDER = 'static/uploads/profiles'
+
+# Create directories if they don't exist
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(PROFILE_UPLOAD_FOLDER, exist_ok=True)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -59,7 +72,7 @@ class User(UserMixin, db.Model):
         
         # Save the image
         filename = secure_filename(f'profile_{self.username}.jpg')
-        img_path = os.path.join(app.config['UPLOAD_FOLDER'], 'profiles', filename)
+        img_path = os.path.join(PROFILE_UPLOAD_FOLDER, filename)
         img.save(img_path)
         return filename
 
@@ -170,7 +183,7 @@ def new_recipe():
         file = request.files['image']
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
         else:
             filename = 'default.jpg'
             
@@ -240,13 +253,25 @@ def setup_profile():
     if request.method == 'POST':
         if 'profile_pic' in request.files:
             file = request.files['profile_pic']
-            if file and allowed_file(file.filename):
-                filename = current_user.save_profile_pic(file)
-                current_user.profile_pic = filename
-        
-        current_user.bio = request.form.get('bio', '')
-        db.session.commit()
+            if file.filename != '':
+                try:
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join(PROFILE_UPLOAD_FOLDER, filename)
+                    file.save(filepath)
+                    current_user.profile_pic = filename
+                    db.session.commit()
+                except Exception as e:
+                    app.logger.error(f"File upload error: {str(e)}")
+                    flash('Error uploading file', 'danger')
+                    return redirect(url_for('setup_profile'))
+
+        if 'bio' in request.form:
+            current_user.bio = request.form['bio']
+            db.session.commit()
+            
+        flash('Profile updated successfully!', 'success')
         return redirect(url_for('profile', username=current_user.username))
+    
     return render_template('setup_profile.html')
 
 @app.route('/follow/<username>', methods=['POST'])
@@ -278,8 +303,6 @@ def about():
     return render_template('about.html')
 
 if __name__ == '__main__':
-    if not os.path.exists('static/uploads'):
-        os.makedirs('static/uploads')
     with app.app_context():
         db.create_all()
     app.run(debug=True)
