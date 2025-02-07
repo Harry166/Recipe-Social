@@ -190,28 +190,45 @@ def logout():
 @login_required
 def new_recipe():
     if request.method == 'POST':
-        file = request.files['image']
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
-        else:
+        try:
+            # Handle image upload
+            file = request.files['image']
             filename = 'default.jpg'
             
-        # Get ingredients list and format it
-        ingredients = request.form.getlist('ingredients[]')
-        formatted_ingredients = '\n'.join(f'• {ingredient.strip()}' for ingredient in ingredients if ingredient.strip())
+            if file and file.filename != '':
+                if allowed_file(file.filename):
+                    # Create upload directory if it doesn't exist
+                    os.makedirs('static/uploads', exist_ok=True)
+                    
+                    filename = secure_filename(file.filename)
+                    filepath = os.path.join('static/uploads', filename)
+                    file.save(filepath)
+                else:
+                    flash('Invalid file type. Please use jpg, jpeg, png, or gif.', 'danger')
+                    return render_template('create_recipe.html')
             
-        recipe = Recipe(
-            title=request.form['title'],
-            ingredients=formatted_ingredients,
-            preparation_time=request.form['preparation_time'],
-            instructions=request.form['instructions'],
-            image_file=filename,
-            author=current_user
-        )
-        db.session.add(recipe)
-        db.session.commit()
-        return redirect(url_for('home'))
+            # Get ingredients list and format it
+            ingredients = request.form.getlist('ingredients[]')
+            formatted_ingredients = '\n'.join(f'• {ingredient.strip()}' for ingredient in ingredients if ingredient.strip())
+            
+            recipe = Recipe(
+                title=request.form['title'],
+                ingredients=formatted_ingredients,
+                preparation_time=request.form['preparation_time'],
+                instructions=request.form['instructions'],
+                image_file=filename,
+                author=current_user
+            )
+            db.session.add(recipe)
+            db.session.commit()
+            flash('Recipe created successfully!', 'success')
+            return redirect(url_for('home'))
+            
+        except Exception as e:
+            print(f"Recipe creation error: {str(e)}")  # For debugging
+            flash('Error creating recipe', 'danger')
+            return render_template('create_recipe.html')
+            
     return render_template('create_recipe.html')
 
 @app.route('/recipe/<int:recipe_id>')
