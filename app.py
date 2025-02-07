@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 import os
@@ -9,8 +9,11 @@ from PIL import Image
 import io
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here'
+app.config['SECRET_KEY'] = 'letsgo123'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///recipes.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=365 * 10)
+app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=365 * 10)
 
 # Update your upload folder configuration
 if os.environ.get('RENDER'):
@@ -155,18 +158,26 @@ def register():
                    password=generate_password_hash(password))
         db.session.add(user)
         db.session.commit()
-        login_user(user)
+        login_user(user, remember=True)
         return redirect(url_for('setup_profile'))
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('home'))
+    
     if request.method == 'POST':
         user = User.query.filter_by(username=request.form['username']).first()
         if user and check_password_hash(user.password, request.form['password']):
-            login_user(user)
-            return redirect(url_for('home'))
-        flash('Invalid username or password')
+            login_user(user, remember=True)
+            next_page = request.args.get('next')
+            flash('Login successful!', 'success')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
+        else:
+            flash('Invalid username or password', 'danger')
+            return redirect(url_for('login'))
+    
     return render_template('login.html')
 
 @app.route('/logout')
