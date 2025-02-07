@@ -26,8 +26,9 @@ else:
     PROFILE_UPLOAD_FOLDER = 'static/uploads/profiles'
 
 # Create directories if they don't exist
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-os.makedirs(PROFILE_UPLOAD_FOLDER, exist_ok=True)
+os.makedirs('static', exist_ok=True)
+os.makedirs('static/uploads', exist_ok=True)
+os.makedirs('static/uploads/profiles', exist_ok=True)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)

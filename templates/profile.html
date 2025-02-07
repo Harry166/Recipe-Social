@@ -5,9 +5,11 @@
     <div class="row">
         <div class="col-md-4">
             <div class="card">
-                {% if user.profile_pic and user.profile_pic != 'default_profile.jpg' %}
+                {% if user.profile_pic %}
                     <img src="{{ url_for('static', filename='uploads/profiles/' + user.profile_pic) }}" 
-                         class="card-img-top rounded-circle p-3" alt="Profile Picture">
+                         class="card-img-top rounded-circle p-3" alt="Profile Picture"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <i class="fas fa-user-circle text-center mt-4" style="font-size: 150px; display: none;"></i>
                 {% else %}
                     <i class="fas fa-user-circle text-center mt-4" style="font-size: 150px;"></i>
                 {% endif %}
