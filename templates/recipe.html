@@ -9,15 +9,10 @@
                 <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" 
                      class="card-img-top w-100" 
                      alt="{{ recipe.title }}"
-                     style="max-height: 400px; width: 100%; object-fit: cover;"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <div class="card-img-top d-flex align-items-center justify-content-center bg-light" 
-                     style="height: 400px; display: none;">
-                    <i class="fas fa-image text-muted" style="font-size: 48px;"></i>
-                </div>
+                     style="height: 300px; width: 100%; object-fit: cover;">
             {% else %}
                 <div class="card-img-top d-flex align-items-center justify-content-center bg-light" 
-                     style="height: 400px;">
+                     style="height: 300px;">
                     <i class="fas fa-image text-muted" style="font-size: 48px;"></i>
                 </div>
             {% endif %}
