@@ -172,12 +172,10 @@ def login():
         user = User.query.filter_by(username=request.form['username']).first()
         if user and check_password_hash(user.password, request.form['password']):
             login_user(user, remember=True)
-            next_page = request.args.get('next')
-            flash('Login successful!', 'success')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+            return redirect(url_for('home'))
         else:
             flash('Invalid username or password', 'danger')
-            return redirect(url_for('login'))
+            return render_template('login.html')
     
     return render_template('login.html')
 
@@ -265,23 +263,25 @@ def setup_profile():
     if request.method == 'POST':
         if 'profile_pic' in request.files:
             file = request.files['profile_pic']
-            if file.filename != '':
+            if file and file.filename != '':
                 try:
+                    # Create directories if they don't exist
+                    os.makedirs('static/uploads/profiles', exist_ok=True)
+                    
                     filename = secure_filename(file.filename)
-                    filepath = os.path.join(PROFILE_UPLOAD_FOLDER, filename)
+                    filepath = os.path.join('static/uploads/profiles', filename)
                     file.save(filepath)
                     current_user.profile_pic = filename
                     db.session.commit()
                 except Exception as e:
-                    app.logger.error(f"File upload error: {str(e)}")
+                    print(f"Upload error: {str(e)}")  # For debugging
                     flash('Error uploading file', 'danger')
-                    return redirect(url_for('setup_profile'))
+                    return render_template('setup_profile.html')
 
         if 'bio' in request.form:
             current_user.bio = request.form['bio']
             db.session.commit()
-            
-        flash('Profile updated successfully!', 'success')
+        
         return redirect(url_for('profile', username=current_user.username))
     
     return render_template('setup_profile.html')
