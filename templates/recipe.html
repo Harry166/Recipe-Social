@@ -4,19 +4,20 @@
 <div class="row">
     <div class="col-md-8 offset-md-2">
         <div class="card">
-            <!-- For recipe thumbnail -->
+            <!-- For the full recipe view -->
             {% if recipe.image_file %}
                 <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" 
-                     class="card-img-top" alt="{{ recipe.title }}"
-                     style="height: 200px; object-fit: cover;"
+                     class="card-img-top w-100" 
+                     alt="{{ recipe.title }}"
+                     style="max-height: 400px; width: 100%; object-fit: cover;"
                      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                 <div class="card-img-top d-flex align-items-center justify-content-center bg-light" 
-                     style="height: 200px; display: none;">
+                     style="height: 400px; display: none;">
                     <i class="fas fa-image text-muted" style="font-size: 48px;"></i>
                 </div>
             {% else %}
                 <div class="card-img-top d-flex align-items-center justify-content-center bg-light" 
-                     style="height: 200px;">
+                     style="height: 400px;">
                     <i class="fas fa-image text-muted" style="font-size: 48px;"></i>
                 </div>
             {% endif %}
