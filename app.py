@@ -85,10 +85,13 @@ class User(UserMixin, db.Model):
     )
 
     def save_profile_pic(self, picture_data):
-        # Upload to Cloudinary
-        result = cloudinary.uploader.upload(picture_data)
-        self.profile_pic = result['secure_url']
-        return self.profile_pic
+        try:
+            # Upload directly to Cloudinary
+            result = cloudinary.uploader.upload(picture_data)
+            return result['secure_url']
+        except Exception as e:
+            print(f"Cloudinary upload error: {str(e)}")
+            return 'default.jpg'
 
     def like_recipe(self, recipe):
         if not self.has_liked_recipe(recipe):
@@ -202,36 +205,26 @@ def new_recipe():
     if request.method == 'POST':
         try:
             file = request.files['image']
-            filename = 'default.jpg'
+            image_url = 'default.jpg'
             
             if file and file.filename != '':
-                if allowed_file(file.filename):
-                    # Upload to Cloudinary
-                    result = cloudinary.uploader.upload(file)
-                    filename = result['secure_url']
-                else:
-                    flash('Invalid file type. Please use jpg, jpeg, png, or gif.', 'danger')
-                    return render_template('create_recipe.html')
-            
-            # Get ingredients list and format it
-            ingredients = request.form.getlist('ingredients[]')
-            formatted_ingredients = '\n'.join(f'• {ingredient.strip()}' for ingredient in ingredients if ingredient.strip())
+                # Upload directly to Cloudinary
+                result = cloudinary.uploader.upload(file)
+                image_url = result['secure_url']
             
             recipe = Recipe(
                 title=request.form['title'],
-                ingredients=formatted_ingredients,
+                ingredients=request.form['ingredients'],
                 preparation_time=request.form['preparation_time'],
                 instructions=request.form['instructions'],
-                image_file=filename,
+                image_file=image_url,
                 author=current_user
             )
             db.session.add(recipe)
             db.session.commit()
-            flash('Recipe created successfully!', 'success')
             return redirect(url_for('home'))
-            
         except Exception as e:
-            print(f"Recipe creation error: {str(e)}")  # For debugging
+            print(f"Recipe creation error: {str(e)}")
             flash('Error creating recipe', 'danger')
             return render_template('create_recipe.html')
             

@@ -6,9 +6,8 @@
         <div class="card">
             <!-- For the full recipe view -->
             {% if recipe.image_file %}
-                <img src="{{ url_for('static', filename='uploads/' + recipe.image_file) }}" 
+                <img src="{{ recipe.image_file }}" alt="{{ recipe.title }}" 
                      class="card-img-top w-100" 
-                     alt="{{ recipe.title }}"
                      style="height: 300px; width: 100%; object-fit: cover;">
             {% else %}
                 <div class="card-img-top d-flex align-items-center justify-content-center bg-light" 
