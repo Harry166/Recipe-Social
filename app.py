@@ -445,6 +445,251 @@ def setup_official_content():
                 "preparation_time": "15 minutes",
                 "instructions": "1. Chop vegetables\n2. Add cheese and olives\n3. Dress with oil\n4. Season to taste",
                 "image_file": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe"
+            },
+            {
+                "title": "Homemade Sushi Roll",
+                "ingredients": "• Sushi rice\n• Nori sheets\n• Cucumber\n• Avocado\n• Salmon/Tuna\n• Soy sauce",
+                "preparation_time": "45 minutes",
+                "instructions": "1. Cook sushi rice\n2. Prepare fillings\n3. Roll with nori\n4. Slice and serve",
+                "image_file": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c"
+            },
+            {
+                "title": "Chocolate Banana Smoothie",
+                "ingredients": "• Banana\n• Cocoa powder\n• Milk\n• Honey\n• Ice cubes\n• Vanilla extract",
+                "preparation_time": "5 minutes",
+                "instructions": "1. Add all ingredients\n2. Blend until smooth\n3. Pour and enjoy",
+                "image_file": "https://images.unsplash.com/photo-1577805947697-89e18249d767"
+            },
+            {
+                "title": "Vegetable Pasta",
+                "ingredients": "• Penne pasta\n• Mixed vegetables\n• Olive oil\n• Garlic\n• Parmesan\n• Basil",
+                "preparation_time": "20 minutes",
+                "instructions": "1. Cook pasta\n2. Sauté vegetables\n3. Combine with sauce\n4. Top with cheese",
+                "image_file": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9"
+            },
+            {
+                "title": "Berry Pancakes",
+                "ingredients": "• Flour\n• Milk\n• Eggs\n• Mixed berries\n• Maple syrup\n• Butter",
+                "preparation_time": "25 minutes",
+                "instructions": "1. Mix batter\n2. Cook pancakes\n3. Add berries\n4. Serve with syrup",
+                "image_file": "https://images.unsplash.com/photo-1528207776546-365bb710ee93"
+            },
+            {
+                "title": "Chicken Caesar Salad",
+                "ingredients": "• Romaine lettuce\n• Grilled chicken\n• Croutons\n• Parmesan\n• Caesar dressing",
+                "preparation_time": "20 minutes",
+                "instructions": "1. Grill chicken\n2. Chop lettuce\n3. Combine ingredients\n4. Add dressing",
+                "image_file": "https://images.unsplash.com/photo-1550304943-4f24f54ddde9"
+            },
+            {
+                "title": "Beef Tacos",
+                "ingredients": "• Ground beef\n• Taco shells\n• Lettuce\n• Tomatoes\n• Cheese\n• Sour cream",
+                "preparation_time": "25 minutes",
+                "instructions": "1. Cook beef with spices\n2. Warm shells\n3. Prepare toppings\n4. Assemble tacos",
+                "image_file": "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b"
+            },
+            {
+                "title": "Fruit Parfait",
+                "ingredients": "• Greek yogurt\n• Granola\n• Mixed berries\n• Honey\n• Mint leaves",
+                "preparation_time": "10 minutes",
+                "instructions": "1. Layer yogurt\n2. Add fruits\n3. Top with granola\n4. Drizzle honey",
+                "image_file": "https://images.unsplash.com/photo-1488477181946-6428a0291777"
+            },
+            {
+                "title": "Mushroom Risotto",
+                "ingredients": "• Arborio rice\n• Mushrooms\n• Onion\n• White wine\n• Parmesan\n• Butter",
+                "preparation_time": "40 minutes",
+                "instructions": "1. Sauté mushrooms\n2. Cook rice slowly\n3. Add stock gradually\n4. Finish with cheese",
+                "image_file": "https://images.unsplash.com/photo-1476124369491-e7addf5db371"
+            },
+            {
+                "title": "Caprese Sandwich",
+                "ingredients": "• Ciabatta bread\n• Mozzarella\n• Tomatoes\n• Basil\n• Balsamic glaze",
+                "preparation_time": "10 minutes",
+                "instructions": "1. Slice bread\n2. Layer ingredients\n3. Add basil\n4. Drizzle balsamic",
+                "image_file": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af"
+            },
+            {
+                "title": "Shrimp Scampi",
+                "ingredients": "• Shrimp\n• Linguine\n• Garlic\n• White wine\n• Lemon\n• Parsley",
+                "preparation_time": "25 minutes",
+                "instructions": "1. Cook pasta\n2. Sauté shrimp\n3. Make sauce\n4. Combine all",
+                "image_file": "https://images.unsplash.com/photo-1565557623262-b51c2513a641"
+            },
+            {
+                "title": "Vegetable Curry",
+                "ingredients": "• Mixed vegetables\n• Coconut milk\n• Curry paste\n• Rice\n• Cilantro\n• Lime",
+                "preparation_time": "35 minutes",
+                "instructions": "1. Cook rice\n2. Prepare curry sauce\n3. Add vegetables\n4. Simmer until done",
+                "image_file": "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd"
+            },
+            {
+                "title": "Banana Bread",
+                "ingredients": "• Ripe bananas\n• Flour\n• Sugar\n• Eggs\n• Butter\n• Vanilla",
+                "preparation_time": "1 hour",
+                "instructions": "1. Mash bananas\n2. Mix ingredients\n3. Pour in pan\n4. Bake at 350°F",
+                "image_file": "https://images.unsplash.com/photo-1605286658031-68f5f1d3681e"
+            },
+            {
+                "title": "Quinoa Bowl",
+                "ingredients": "• Quinoa\n• Roasted vegetables\n• Chickpeas\n• Avocado\n• Tahini dressing",
+                "preparation_time": "30 minutes",
+                "instructions": "1. Cook quinoa\n2. Roast vegetables\n3. Prepare dressing\n4. Assemble bowl",
+                "image_file": "https://images.unsplash.com/photo-1543362906-acfc16c67564"
+            },
+            {
+                "title": "Fish Tacos",
+                "ingredients": "• White fish\n• Cabbage slaw\n• Lime crema\n• Tortillas\n• Avocado",
+                "preparation_time": "25 minutes",
+                "instructions": "1. Cook fish\n2. Make slaw\n3. Prepare crema\n4. Assemble tacos",
+                "image_file": "https://images.unsplash.com/photo-1512838243191-e81e8f66f1fd"
+            },
+            {
+                "title": "Chia Pudding",
+                "ingredients": "• Chia seeds\n• Almond milk\n• Honey\n• Fresh fruits\n• Nuts",
+                "preparation_time": "5 minutes + overnight",
+                "instructions": "1. Mix ingredients\n2. Refrigerate overnight\n3. Add toppings\n4. Serve chilled",
+                "image_file": "https://images.unsplash.com/photo-1458644267420-66bc8a5f21e4"
+            },
+            {
+                "title": "Pesto Pasta",
+                "ingredients": "• Spaghetti\n• Fresh basil\n• Pine nuts\n• Garlic\n• Parmesan\n• Olive oil",
+                "preparation_time": "20 minutes",
+                "instructions": "1. Cook pasta\n2. Blend pesto ingredients\n3. Combine\n4. Top with cheese",
+                "image_file": "https://images.unsplash.com/photo-1473093226795-af9932fe5856"
+            },
+            {
+                "title": "Overnight Oats",
+                "ingredients": "• Rolled oats\n• Milk\n• Yogurt\n• Chia seeds\n• Honey\n• Berries",
+                "preparation_time": "5 minutes + overnight",
+                "instructions": "1. Mix ingredients\n2. Refrigerate overnight\n3. Add toppings\n4. Enjoy cold",
+                "image_file": "https://images.unsplash.com/photo-1517673132405-a56a62b18caf"
+            },
+            {
+                "title": "Beef Stir Fry",
+                "ingredients": "• Beef strips\n• Bell peppers\n• Broccoli\n• Soy sauce\n• Ginger\n• Rice",
+                "preparation_time": "30 minutes",
+                "instructions": "1. Cook rice\n2. Stir fry beef\n3. Add vegetables\n4. Mix with sauce",
+                "image_file": "https://images.unsplash.com/photo-1534939561126-855b8675edd7"
+            },
+            {
+                "title": "Mediterranean Hummus Bowl",
+                "ingredients": "• Hummus\n• Cherry tomatoes\n• Cucumber\n• Olives\n• Feta\n• Pita bread",
+                "preparation_time": "15 minutes",
+                "instructions": "1. Spread hummus\n2. Arrange toppings\n3. Drizzle olive oil\n4. Serve with pita",
+                "image_file": "https://images.unsplash.com/photo-1540914124281-342587941389"
+            },
+            {
+                "title": "Mango Lassi",
+                "ingredients": "• Ripe mango\n• Yogurt\n• Milk\n• Cardamom\n• Honey\n• Ice",
+                "preparation_time": "10 minutes",
+                "instructions": "1. Blend mango\n2. Add yogurt and milk\n3. Add spices\n4. Serve chilled",
+                "image_file": "https://images.unsplash.com/photo-1546173159-315724a31696"
+            },
+            {
+                "title": "Lemon Garlic Shrimp",
+                "ingredients": "• Shrimp\n• Garlic\n• Lemon\n• Butter\n• Parsley\n• White wine",
+                "preparation_time": "20 minutes",
+                "instructions": "1. Melt butter\n2. Cook garlic\n3. Add shrimp\n4. Finish with lemon",
+                "image_file": "https://images.unsplash.com/photo-1625943553852-781c212b8079"
+            },
+            {
+                "title": "Acai Bowl",
+                "ingredients": "• Acai packet\n• Banana\n• Berries\n• Granola\n• Honey\n• Coconut",
+                "preparation_time": "10 minutes",
+                "instructions": "1. Blend acai\n2. Pour in bowl\n3. Add toppings\n4. Drizzle honey",
+                "image_file": "https://images.unsplash.com/photo-1590301157890-4810ed352733"
+            },
+            {
+                "title": "Veggie Wrap",
+                "ingredients": "• Tortilla\n• Hummus\n• Mixed greens\n• Avocado\n• Carrots\n• Cucumber",
+                "preparation_time": "15 minutes",
+                "instructions": "1. Spread hummus\n2. Layer vegetables\n3. Add avocado\n4. Roll tightly",
+                "image_file": "https://images.unsplash.com/photo-1600850056064-a8b380df8395"
+            },
+            {
+                "title": "Chicken Noodle Soup",
+                "ingredients": "• Chicken breast\n• Egg noodles\n• Carrots\n• Celery\n• Onion\n• Broth",
+                "preparation_time": "45 minutes",
+                "instructions": "1. Cook chicken\n2. Prepare vegetables\n3. Add noodles\n4. Simmer",
+                "image_file": "https://images.unsplash.com/photo-1547592166-23ac45744acd"
+            },
+            {
+                "title": "Apple Cinnamon Oatmeal",
+                "ingredients": "• Rolled oats\n• Apple\n• Cinnamon\n• Honey\n• Walnuts\n• Milk",
+                "preparation_time": "15 minutes",
+                "instructions": "1. Cook oats\n2. Add apple\n3. Stir in cinnamon\n4. Top with nuts",
+                "image_file": "https://images.unsplash.com/photo-1517673400267-0251440c45dc"
+            },
+            {
+                "title": "Grilled Cheese Sandwich",
+                "ingredients": "• Sourdough bread\n• Cheddar cheese\n• Butter\n• Optional: tomato\n• Optional: ham",
+                "preparation_time": "10 minutes",
+                "instructions": "1. Butter bread\n2. Add cheese\n3. Grill until golden\n4. Slice and serve",
+                "image_file": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af"
+            },
+            {
+                "title": "Fresh Spring Rolls",
+                "ingredients": "• Rice paper\n• Shrimp\n• Rice noodles\n• Lettuce\n• Mint\n• Peanut sauce",
+                "preparation_time": "30 minutes",
+                "instructions": "1. Prep ingredients\n2. Soak rice paper\n3. Roll ingredients\n4. Serve with sauce",
+                "image_file": "https://images.unsplash.com/photo-1536510233921-8e5043fce771"
+            },
+            {
+                "title": "Roasted Vegetables",
+                "ingredients": "• Brussels sprouts\n• Carrots\n• Sweet potato\n• Olive oil\n• Herbs\n• Garlic",
+                "preparation_time": "40 minutes",
+                "instructions": "1. Cut vegetables\n2. Season well\n3. Roast at 400°F\n4. Serve hot",
+                "image_file": "https://images.unsplash.com/photo-1546793665-c74683f339c1"
+            },
+            {
+                "title": "Protein Smoothie",
+                "ingredients": "• Protein powder\n• Banana\n• Almond milk\n• Peanut butter\n• Ice\n• Honey",
+                "preparation_time": "5 minutes",
+                "instructions": "1. Add ingredients\n2. Blend until smooth\n3. Check consistency\n4. Serve cold",
+                "image_file": "https://images.unsplash.com/photo-1553530666-ba11a7da3888"
+            },
+            {
+                "title": "Garlic Bread",
+                "ingredients": "• French bread\n• Butter\n• Garlic\n• Parsley\n• Parmesan\n• Olive oil",
+                "preparation_time": "15 minutes",
+                "instructions": "1. Mix butter & garlic\n2. Spread on bread\n3. Bake until crispy\n4. Garnish",
+                "image_file": "https://images.unsplash.com/photo-1619535860434-da906327f876"
+            },
+            {
+                "title": "Chocolate Mousse",
+                "ingredients": "• Dark chocolate\n• Heavy cream\n• Eggs\n• Sugar\n• Vanilla extract",
+                "preparation_time": "3 hours",
+                "instructions": "1. Melt chocolate\n2. Whip cream\n3. Fold together\n4. Chill",
+                "image_file": "https://images.unsplash.com/photo-1541783245831-57d6fb0926d3"
+            },
+            {
+                "title": "Bruschetta",
+                "ingredients": "• Baguette\n• Tomatoes\n• Basil\n• Garlic\n• Olive oil\n• Balsamic",
+                "preparation_time": "20 minutes",
+                "instructions": "1. Toast bread\n2. Mix topping\n3. Assemble\n4. Drizzle oil",
+                "image_file": "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f"
+            },
+            {
+                "title": "Fruit Salad",
+                "ingredients": "• Mixed berries\n• Apple\n• Orange\n• Grapes\n• Honey\n• Mint",
+                "preparation_time": "15 minutes",
+                "instructions": "1. Cut fruits\n2. Combine in bowl\n3. Add honey\n4. Garnish with mint",
+                "image_file": "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea"
+            },
+            {
+                "title": "Mushroom Soup",
+                "ingredients": "• Mixed mushrooms\n• Onion\n• Garlic\n• Cream\n• Thyme\n• Stock",
+                "preparation_time": "35 minutes",
+                "instructions": "1. Sauté vegetables\n2. Add stock\n3. Blend smooth\n4. Add cream",
+                "image_file": "https://images.unsplash.com/photo-1547592166-23ac45744acd"
+            },
+            {
+                "title": "Energy Balls",
+                "ingredients": "• Dates\n• Nuts\n• Oats\n• Cocoa powder\n• Honey\n• Coconut",
+                "preparation_time": "20 minutes",
+                "instructions": "1. Process dates\n2. Mix ingredients\n3. Form balls\n4. Roll in coconut",
+                "image_file": "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26"
             }
         ]
 
