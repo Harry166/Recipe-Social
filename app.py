@@ -362,6 +362,129 @@ def test_upload():
             'status': 'failed'
         }), 500
 
+@app.route('/setup-official-content')
+def setup_official_content():
+    try:
+        official = User(
+            username="Recipe Social",
+            email="official@recipesocial.com",
+            password=generate_password_hash("securepassword123"),
+            bio="The official Recipe Social account.",
+            profile_pic="https://images.unsplash.com/photo-1556911261-6bd341186b2f"
+        )
+        db.session.add(official)
+        db.session.commit()
+
+        recipes = [
+            {
+                "title": "Classic Homemade Pizza",
+                "ingredients": "• 2 1/4 cups bread flour\n• 1 1/2 tsp instant yeast\n• 1 1/2 tsp salt\n• 1 cup warm water\n• 2 tbsp olive oil\n• Pizza sauce\n• Mozzarella cheese",
+                "preparation_time": "1 hour",
+                "instructions": "1. Mix flour, yeast, salt\n2. Add water and oil, knead\n3. Let rise 30 minutes\n4. Roll out, add toppings\n5. Bake at 450°F for 15 minutes",
+                "image_file": "https://images.unsplash.com/photo-1513104890138-7c749659a591"
+            },
+            {
+                "title": "Easy Chocolate Chip Cookies",
+                "ingredients": "• 2 1/4 cups flour\n• 1 cup butter\n• 3/4 cup sugar\n• 3/4 cup brown sugar\n• 2 eggs\n• 2 cups chocolate chips",
+                "preparation_time": "25 minutes",
+                "instructions": "1. Cream butter and sugars\n2. Add eggs and vanilla\n3. Mix in dry ingredients\n4. Add chocolate chips\n5. Bake at 375°F for 10 minutes",
+                "image_file": "https://images.unsplash.com/photo-1499636136210-6f4ee915583e"
+            },
+            {
+                "title": "Creamy Mac and Cheese",
+                "ingredients": "• 1 pound macaroni\n• 3 cups cheddar cheese\n• 2 cups milk\n• 1/4 cup butter\n• 1/4 cup flour\n• Salt and pepper",
+                "preparation_time": "30 minutes",
+                "instructions": "1. Cook pasta\n2. Make cheese sauce\n3. Combine and bake\n4. Enjoy hot",
+                "image_file": "https://images.unsplash.com/photo-1543339494-b4cd4f7ba686"
+            },
+            {
+                "title": "Fresh Garden Salad",
+                "ingredients": "• Mixed greens\n• Cherry tomatoes\n• Cucumber\n• Red onion\n• Olive oil\n• Balsamic vinegar",
+                "preparation_time": "10 minutes",
+                "instructions": "1. Wash vegetables\n2. Chop ingredients\n3. Mix in bowl\n4. Add dressing",
+                "image_file": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd"
+            },
+            {
+                "title": "Homemade Burger",
+                "ingredients": "• Ground beef\n• Burger buns\n• Lettuce\n• Tomato\n• Onion\n• Cheese\n• Condiments",
+                "preparation_time": "20 minutes",
+                "instructions": "1. Form patties\n2. Grill to preference\n3. Toast buns\n4. Assemble burger",
+                "image_file": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd"
+            },
+            {
+                "title": "Breakfast Smoothie Bowl",
+                "ingredients": "• Frozen berries\n• Banana\n• Greek yogurt\n• Honey\n• Granola\n• Chia seeds",
+                "preparation_time": "10 minutes",
+                "instructions": "1. Blend fruits and yogurt\n2. Pour in bowl\n3. Top with granola and seeds\n4. Drizzle honey",
+                "image_file": "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38"
+            },
+            {
+                "title": "Grilled Salmon",
+                "ingredients": "• Salmon fillets\n• Lemon\n• Olive oil\n• Garlic\n• Herbs\n• Salt and pepper",
+                "preparation_time": "20 minutes",
+                "instructions": "1. Marinate salmon\n2. Heat grill\n3. Cook 4-5 mins each side\n4. Serve with lemon",
+                "image_file": "https://images.unsplash.com/photo-1485921325833-c519f76c4927"
+            },
+            {
+                "title": "Avocado Toast",
+                "ingredients": "• Sourdough bread\n• Ripe avocado\n• Cherry tomatoes\n• Red pepper flakes\n• Salt and pepper",
+                "preparation_time": "10 minutes",
+                "instructions": "1. Toast bread\n2. Mash avocado\n3. Add toppings\n4. Season to taste",
+                "image_file": "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d"
+            },
+            {
+                "title": "Chicken Stir Fry",
+                "ingredients": "• Chicken breast\n• Mixed vegetables\n• Soy sauce\n• Ginger\n• Garlic\n• Rice",
+                "preparation_time": "25 minutes",
+                "instructions": "1. Cook rice\n2. Stir fry chicken\n3. Add vegetables\n4. Mix sauce and serve",
+                "image_file": "https://images.unsplash.com/photo-1603133872878-684f208fb84b"
+            },
+            {
+                "title": "Greek Salad",
+                "ingredients": "• Cucumber\n• Tomatoes\n• Red onion\n• Feta cheese\n• Olives\n• Olive oil",
+                "preparation_time": "15 minutes",
+                "instructions": "1. Chop vegetables\n2. Add cheese and olives\n3. Dress with oil\n4. Season to taste",
+                "image_file": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe"
+            }
+        ]
+
+        for recipe_data in recipes:
+            recipe = Recipe(
+                title=recipe_data["title"],
+                ingredients=recipe_data["ingredients"],
+                preparation_time=recipe_data["preparation_time"],
+                instructions=recipe_data["instructions"],
+                image_file=recipe_data["image_file"],
+                user_id=official.id
+            )
+            db.session.add(recipe)
+        
+        db.session.commit()
+        return "Official account and recipes created!"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+@app.route('/create-test-recipe')
+def create_test_recipe():
+    try:
+        # Upload image to Cloudinary
+        result = cloudinary.uploader.upload("https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg")
+        
+        # Create test recipe
+        recipe = Recipe(
+            title="Test Recipe",
+            ingredients="Test ingredients",
+            preparation_time="5 minutes",
+            instructions="Test instructions",
+            image_file=result['secure_url'],
+            user_id=1
+        )
+        db.session.add(recipe)
+        db.session.commit()
+        return "Test recipe created with real image!"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
 # Configure Cloudinary
 cloudinary.config( 
     cloud_name = "dxxxzdjmv",
