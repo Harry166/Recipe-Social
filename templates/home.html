@@ -1,21 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Add the mood selector at the top -->
-<div class="d-flex justify-content-center mb-4">
-    <div class="mood-selector" style="width: 300px;">
-        <select id="moodSelect" class="form-select">
-            <option value="">What are you in the mood for?</option>
-            <option value="Happy">Bright & Fresh 😊</option>
-            <option value="Sad">Comfort Food 🤗</option>
-            <option value="Energetic">Healthy & Light 💪</option>
-            <option value="Tired">Quick & Easy 😴</option>
-            <option value="Stressed">Soothing & Warm 😌</option>
-            <option value="Adventurous">Bold & Spicy 🌎</option>
-        </select>
-    </div>
-</div>
-
 <h2>Top Recipes</h2>
 <div class="row mb-4" id="top-recipes-container">
     {% for recipe in top_recipes %}
@@ -91,74 +76,4 @@
     </div>
     {% endfor %}
 </div>
-
-<style>
-    .mood-selector select {
-        padding: 10px 15px;
-        border: 2px solid #007bff;
-        border-radius: 25px;
-        font-size: 16px;
-        background-color: white;
-        color: #007bff;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .mood-selector select:hover {
-        background-color: #f8f9fa;
-        border-color: #0056b3;
-    }
-
-    .mood-selector select:focus {
-        outline: none;
-        box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-        border-color: #0056b3;
-    }
-
-    .mood-selector option {
-        padding: 10px;
-        font-size: 14px;
-    }
-</style>
-
-<script>
-document.getElementById('moodSelect').addEventListener('change', function() {
-    const mood = this.value;
-    if (mood) {
-        fetch('/get_mood_recipes', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: `mood=${mood}`
-        })
-        .then(response => response.json())
-        .then(recipes => {
-            const allRecipesContainer = document.getElementById('all-recipes-container');
-            allRecipesContainer.innerHTML = recipes.map(recipe => `
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <div class="position-relative">
-                            ${recipe.has_been_top ? '<i class="fas fa-star position-absolute top-0 start-0 m-2 text-warning"></i>' : ''}
-                            <img src="${recipe.image_file}" class="card-img-top" alt="${recipe.title}" style="height: 200px; object-fit: cover;">
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${recipe.title}</h5>
-                            <p class="card-text small">
-                                <i class="fas fa-clock"></i> ${recipe.preparation_time} mins |
-                                <i class="fas fa-eye"></i> ${recipe.views} views |
-                                <i class="fas fa-calendar"></i> ${recipe.date_posted}
-                            </p>
-                            <a href="/recipe/${recipe.id}" class="btn btn-primary">View Recipe</a>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        });
-    } else {
-        // If no mood is selected, refresh the page to show all recipes
-        window.location.reload();
-    }
-});
-</script>
 {% endblock %}
