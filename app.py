@@ -351,6 +351,21 @@ def refresh_all():
     except Exception as e:
         return f"Error: {str(e)}"
 
+@app.route('/test-upload')
+def test_upload():
+    try:
+        # Try a test upload with a simple string
+        result = cloudinary.uploader.upload("https://res.cloudinary.com/demo/image/upload/v1312461204/sample.jpg")
+        return jsonify({
+            'status': 'success',
+            'url': result['secure_url']
+        })
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'status': 'failed'
+        }), 500
+
 # Configure Cloudinary
 cloudinary.config( 
     cloud_name = "dxxxzdjmv",
