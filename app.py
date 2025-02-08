@@ -365,9 +365,14 @@ def test_upload():
 @app.route('/setup-official-content')
 def setup_official_content():
     try:
+        # First, delete all existing recipes from Recipe Social account
         official = User.query.filter_by(username="Recipe Social").first()
-        
-        if not official:
+        if official:
+            # Delete all existing recipes for this user
+            Recipe.query.filter_by(user_id=official.id).delete()
+            db.session.commit()
+        else:
+            # Create the official account if it doesn't exist
             official = User(
                 username="Recipe Social",
                 email="official@recipesocial.com",
@@ -378,6 +383,7 @@ def setup_official_content():
             db.session.add(official)
             db.session.commit()
 
+        # Then add all the recipes (rest of your code remains the same)
         recipes = [
             {
                 "title": "Classic Homemade Pizza",
@@ -445,20 +451,18 @@ def setup_official_content():
         ]
 
         for recipe_data in recipes:
-            existing_recipe = Recipe.query.filter_by(title=recipe_data["title"], user_id=official.id).first()
-            if not existing_recipe:
-                recipe = Recipe(
-                    title=recipe_data["title"],
-                    ingredients=recipe_data["ingredients"],
-                    preparation_time=recipe_data["preparation_time"],
-                    instructions=recipe_data["instructions"],
-                    image_file=recipe_data["image_file"],
-                    user_id=official.id
-                )
-                db.session.add(recipe)
+            recipe = Recipe(
+                title=recipe_data["title"],
+                ingredients=recipe_data["ingredients"],
+                preparation_time=recipe_data["preparation_time"],
+                instructions=recipe_data["instructions"],
+                image_file=recipe_data["image_file"],
+                user_id=official.id
+            )
+            db.session.add(recipe)
         
         db.session.commit()
-        return "Official account and recipes created!"
+        return "Official account and recipes created/updated!"
     except Exception as e:
         return f"Error: {str(e)}"
 
