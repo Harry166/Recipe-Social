@@ -365,11 +365,9 @@ def test_upload():
 @app.route('/setup-official-content')
 def setup_official_content():
     try:
-        # Check if official account exists
         official = User.query.filter_by(username="Recipe Social").first()
         
         if not official:
-            # Create only if it doesn't exist
             official = User(
                 username="Recipe Social",
                 email="official@recipesocial.com",
@@ -383,331 +381,81 @@ def setup_official_content():
         recipes = [
             {
                 "title": "Classic Homemade Pizza",
-                "ingredients": "• 2 1/4 cups bread flour\n• 1 1/2 tsp instant yeast\n• 1 1/2 tsp salt\n• 1 cup warm water\n• 2 tbsp olive oil\n• Pizza sauce\n• Mozzarella cheese",
-                "preparation_time": "1 hour",
-                "instructions": "1. Mix flour, yeast, salt\n2. Add water and oil, knead\n3. Let rise 30 minutes\n4. Roll out, add toppings\n5. Bake at 450°F for 15 minutes",
+                "ingredients": "• 2 1/4 cups bread flour\n• 1 1/2 tsp instant yeast\n• 1 1/2 tsp salt\n• 1 cup warm water (110°F)\n• 2 tbsp olive oil\n• 1 cup pizza sauce\n• 2 cups mozzarella cheese, shredded\n• 1/4 cup fresh basil leaves\n• Optional toppings: pepperoni, mushrooms, bell peppers",
+                "preparation_time": "1 hour 30 minutes",
+                "instructions": "1. In a large bowl, combine flour, yeast, and salt\n2. Add warm water and olive oil, mix until a shaggy dough forms\n3. Knead dough for 10 minutes until smooth and elastic\n4. Place in oiled bowl, cover with damp cloth\n5. Let rise in warm place for 1 hour or until doubled\n6. Preheat oven to 450°F with pizza stone if available\n7. Punch down dough and roll into 14-inch circle\n8. Transfer to parchment paper or cornmeal-dusted pan\n9. Spread sauce evenly, leaving 1/2 inch border\n10. Top with cheese and desired toppings\n11. Bake 12-15 minutes until crust is golden\n12. Garnish with fresh basil\n13. Let cool 5 minutes before slicing",
                 "image_file": "https://images.unsplash.com/photo-1513104890138-7c749659a591"
             },
             {
-                "title": "Easy Chocolate Chip Cookies",
-                "ingredients": "• 2 1/4 cups flour\n• 1 cup butter\n• 3/4 cup sugar\n• 3/4 cup brown sugar\n• 2 eggs\n• 2 cups chocolate chips",
-                "preparation_time": "25 minutes",
-                "instructions": "1. Cream butter and sugars\n2. Add eggs and vanilla\n3. Mix in dry ingredients\n4. Add chocolate chips\n5. Bake at 375°F for 10 minutes",
-                "image_file": "https://images.unsplash.com/photo-1499636136210-6f4ee915583e"
-            },
-            {
                 "title": "Creamy Mac and Cheese",
-                "ingredients": "• 1 pound macaroni\n• 3 cups cheddar cheese\n• 2 cups milk\n• 1/4 cup butter\n• 1/4 cup flour\n• Salt and pepper",
-                "preparation_time": "30 minutes",
-                "instructions": "1. Cook pasta\n2. Make cheese sauce\n3. Combine and bake\n4. Enjoy hot",
+                "ingredients": "• 1 pound elbow macaroni\n• 4 cups sharp cheddar cheese, freshly grated\n• 2 cups whole milk\n• 1/4 cup unsalted butter\n• 1/4 cup all-purpose flour\n• 1 tsp salt\n• 1/2 tsp black pepper\n• 1/4 tsp garlic powder\n• 1/8 tsp cayenne pepper (optional)\n• 1/4 cup breadcrumbs\n• 2 tbsp fresh parsley, chopped",
+                "preparation_time": "35 minutes",
+                "instructions": "1. Bring large pot of salted water to boil\n2. Cook macaroni 2 minutes less than package directions\n3. Meanwhile, melt butter in large saucepan over medium heat\n4. Whisk in flour and cook 1 minute, stirring constantly\n5. Gradually whisk in milk, cook until thickened (3-4 minutes)\n6. Reduce heat to low, add cheese in batches, stirring until melted\n7. Season with salt, pepper, garlic powder, and cayenne if using\n8. Drain pasta (don't rinse), return to pot\n9. Pour cheese sauce over pasta, mix thoroughly\n10. Transfer to baking dish if desired\n11. Top with breadcrumbs\n12. Optional: broil 2-3 minutes until golden\n13. Garnish with parsley and serve hot",
                 "image_file": "https://images.unsplash.com/photo-1543339494-b4cd4f7ba686"
             },
             {
                 "title": "Fresh Garden Salad",
-                "ingredients": "• Mixed greens\n• Cherry tomatoes\n• Cucumber\n• Red onion\n• Olive oil\n• Balsamic vinegar",
-                "preparation_time": "10 minutes",
-                "instructions": "1. Wash vegetables\n2. Chop ingredients\n3. Mix in bowl\n4. Add dressing",
+                "ingredients": "• 6 cups mixed salad greens\n• 1 cup cherry tomatoes, halved\n• 1 English cucumber, thinly sliced\n• 1/2 red onion, thinly sliced\n• 1 avocado, diced\n• 1/4 cup extra virgin olive oil\n• 2 tbsp balsamic vinegar\n• 1 tsp Dijon mustard\n• 1 clove garlic, minced\n• 1/2 tsp honey\n• Salt and pepper to taste\n• Optional: croutons, sunflower seeds",
+                "preparation_time": "15 minutes",
+                "instructions": "1. Wash and thoroughly dry all greens and vegetables\n2. Tear lettuce into bite-sized pieces if needed\n3. Halve cherry tomatoes\n4. Slice cucumber into thin rounds\n5. Soak sliced onion in cold water for 5 minutes to reduce sharpness\n6. Make dressing: whisk olive oil, vinegar, mustard, garlic, and honey\n7. Season dressing with salt and pepper to taste\n8. Drain onions and pat dry\n9. In large bowl, combine greens, tomatoes, cucumber, and onion\n10. Dice avocado just before serving\n11. Drizzle with dressing and toss gently\n12. Top with croutons and seeds if using\n13. Serve immediately",
                 "image_file": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd"
             },
             {
-                "title": "Homemade Burger",
-                "ingredients": "• Ground beef\n• Burger buns\n• Lettuce\n• Tomato\n• Onion\n• Cheese\n• Condiments",
-                "preparation_time": "20 minutes",
-                "instructions": "1. Form patties\n2. Grill to preference\n3. Toast buns\n4. Assemble burger",
-                "image_file": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd"
-            },
-            {
                 "title": "Breakfast Smoothie Bowl",
-                "ingredients": "• Frozen berries\n• Banana\n• Greek yogurt\n• Honey\n• Granola\n• Chia seeds",
-                "preparation_time": "10 minutes",
-                "instructions": "1. Blend fruits and yogurt\n2. Pour in bowl\n3. Top with granola and seeds\n4. Drizzle honey",
+                "ingredients": "• 2 frozen bananas, chunked\n• 1 cup frozen mixed berries\n• 1 cup Greek yogurt\n• 1/4 cup almond milk\n• 1 tbsp honey\n• 1 tbsp chia seeds\nToppings:\n• 1/4 cup granola\n• Fresh berries\n• Sliced banana\n• 1 tbsp almond butter\n• Coconut flakes\n• Extra honey for drizzling",
+                "preparation_time": "15 minutes",
+                "instructions": "1. Place frozen bananas and berries in high-speed blender\n2. Add yogurt, almond milk, and honey\n3. Blend until smooth but still thick (consistency should be thicker than drinkable)\n4. Add more milk 1 tbsp at a time if needed to blend\n5. Stir in chia seeds\n6. Pour into chilled bowl\n7. Arrange toppings in sections:\n   - Place granola on one side\n   - Add fresh berries in another section\n   - Fan out banana slices\n   - Drizzle with almond butter\n   - Sprinkle coconut flakes\n8. Finish with honey drizzle\n9. Serve immediately while cold",
                 "image_file": "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38"
             },
             {
                 "title": "Grilled Salmon",
-                "ingredients": "• Salmon fillets\n• Lemon\n• Olive oil\n• Garlic\n• Herbs\n• Salt and pepper",
-                "preparation_time": "20 minutes",
-                "instructions": "1. Marinate salmon\n2. Heat grill\n3. Cook 4-5 mins each side\n4. Serve with lemon",
+                "ingredients": "• 4 (6 oz) salmon fillets\n• 2 tbsp olive oil\n• 4 cloves garlic, minced\n• 1 lemon, juiced and zested\n• 2 tbsp fresh dill, chopped\n• 1 tsp salt\n• 1/2 tsp black pepper\n• 1/4 tsp red pepper flakes (optional)\n• Lemon wedges for serving",
+                "preparation_time": "25 minutes",
+                "instructions": "1. Pat salmon fillets dry with paper towels\n2. In small bowl, combine olive oil, garlic, lemon juice, zest, and dill\n3. Season fillets with salt and pepper on both sides\n4. Brush with oil mixture, let marinate 10 minutes\n5. Preheat grill to medium-high (400°F)\n6. Clean and oil grill grates well\n7. Place salmon skin-side up on grill\n8. Cook 4-5 minutes until grill marks appear\n9. Carefully flip using wide spatula\n10. Cook 3-4 minutes more until fish flakes easily\n11. Let rest 5 minutes before serving\n12. Garnish with extra dill and lemon wedges",
                 "image_file": "https://images.unsplash.com/photo-1485921325833-c519f76c4927"
             },
             {
-                "title": "Avocado Toast",
-                "ingredients": "• Sourdough bread\n• Ripe avocado\n• Cherry tomatoes\n• Red pepper flakes\n• Salt and pepper",
-                "preparation_time": "10 minutes",
-                "instructions": "1. Toast bread\n2. Mash avocado\n3. Add toppings\n4. Season to taste",
-                "image_file": "https://images.unsplash.com/photo-1541519227354-08fa5d50c44d"
-            },
-            {
-                "title": "Chicken Stir Fry",
-                "ingredients": "• Chicken breast\n• Mixed vegetables\n• Soy sauce\n• Ginger\n• Garlic\n• Rice",
-                "preparation_time": "25 minutes",
-                "instructions": "1. Cook rice\n2. Stir fry chicken\n3. Add vegetables\n4. Mix sauce and serve",
-                "image_file": "https://images.unsplash.com/photo-1603133872878-684f208fb84b"
-            },
-            {
-                "title": "Greek Salad",
-                "ingredients": "• Cucumber\n• Tomatoes\n• Red onion\n• Feta cheese\n• Olives\n• Olive oil",
-                "preparation_time": "15 minutes",
-                "instructions": "1. Chop vegetables\n2. Add cheese and olives\n3. Dress with oil\n4. Season to taste",
-                "image_file": "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe"
-            },
-            {
-                "title": "Homemade Sushi Roll",
-                "ingredients": "• Sushi rice\n• Nori sheets\n• Cucumber\n• Avocado\n• Salmon/Tuna\n• Soy sauce",
-                "preparation_time": "45 minutes",
-                "instructions": "1. Cook sushi rice\n2. Prepare fillings\n3. Roll with nori\n4. Slice and serve",
-                "image_file": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c"
-            },
-            {
-                "title": "Chocolate Banana Smoothie",
-                "ingredients": "• Banana\n• Cocoa powder\n• Milk\n• Honey\n• Ice cubes\n• Vanilla extract",
-                "preparation_time": "5 minutes",
-                "instructions": "1. Add all ingredients\n2. Blend until smooth\n3. Pour and enjoy",
-                "image_file": "https://images.unsplash.com/photo-1577805947697-89e18249d767"
-            },
-            {
-                "title": "Vegetable Pasta",
-                "ingredients": "• Penne pasta\n• Mixed vegetables\n• Olive oil\n• Garlic\n• Parmesan\n• Basil",
-                "preparation_time": "20 minutes",
-                "instructions": "1. Cook pasta\n2. Sauté vegetables\n3. Combine with sauce\n4. Top with cheese",
-                "image_file": "https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9"
-            },
-            {
-                "title": "Berry Pancakes",
-                "ingredients": "• Flour\n• Milk\n• Eggs\n• Mixed berries\n• Maple syrup\n• Butter",
-                "preparation_time": "25 minutes",
-                "instructions": "1. Mix batter\n2. Cook pancakes\n3. Add berries\n4. Serve with syrup",
-                "image_file": "https://images.unsplash.com/photo-1528207776546-365bb710ee93"
-            },
-            {
-                "title": "Chicken Caesar Salad",
-                "ingredients": "• Romaine lettuce\n• Grilled chicken\n• Croutons\n• Parmesan\n• Caesar dressing",
-                "preparation_time": "20 minutes",
-                "instructions": "1. Grill chicken\n2. Chop lettuce\n3. Combine ingredients\n4. Add dressing",
-                "image_file": "https://images.unsplash.com/photo-1550304943-4f24f54ddde9"
-            },
-            {
-                "title": "Beef Tacos",
-                "ingredients": "• Ground beef\n• Taco shells\n• Lettuce\n• Tomatoes\n• Cheese\n• Sour cream",
-                "preparation_time": "25 minutes",
-                "instructions": "1. Cook beef with spices\n2. Warm shells\n3. Prepare toppings\n4. Assemble tacos",
-                "image_file": "https://images.unsplash.com/photo-1551504734-5ee1c4a1479b"
-            },
-            {
-                "title": "Fruit Parfait",
-                "ingredients": "• Greek yogurt\n• Granola\n• Mixed berries\n• Honey\n• Mint leaves",
-                "preparation_time": "10 minutes",
-                "instructions": "1. Layer yogurt\n2. Add fruits\n3. Top with granola\n4. Drizzle honey",
-                "image_file": "https://images.unsplash.com/photo-1488477181946-6428a0291777"
-            },
-            {
-                "title": "Mushroom Risotto",
-                "ingredients": "• Arborio rice\n• Mushrooms\n• Onion\n• White wine\n• Parmesan\n• Butter",
-                "preparation_time": "40 minutes",
-                "instructions": "1. Sauté mushrooms\n2. Cook rice slowly\n3. Add stock gradually\n4. Finish with cheese",
-                "image_file": "https://images.unsplash.com/photo-1476124369491-e7addf5db371"
-            },
-            {
-                "title": "Caprese Sandwich",
-                "ingredients": "• Ciabatta bread\n• Mozzarella\n• Tomatoes\n• Basil\n• Balsamic glaze",
-                "preparation_time": "10 minutes",
-                "instructions": "1. Slice bread\n2. Layer ingredients\n3. Add basil\n4. Drizzle balsamic",
-                "image_file": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af"
-            },
-            {
-                "title": "Shrimp Scampi",
-                "ingredients": "• Shrimp\n• Linguine\n• Garlic\n• White wine\n• Lemon\n• Parsley",
-                "preparation_time": "25 minutes",
-                "instructions": "1. Cook pasta\n2. Sauté shrimp\n3. Make sauce\n4. Combine all",
-                "image_file": "https://images.unsplash.com/photo-1565557623262-b51c2513a641"
-            },
-            {
-                "title": "Vegetable Curry",
-                "ingredients": "• Mixed vegetables\n• Coconut milk\n• Curry paste\n• Rice\n• Cilantro\n• Lime",
-                "preparation_time": "35 minutes",
-                "instructions": "1. Cook rice\n2. Prepare curry sauce\n3. Add vegetables\n4. Simmer until done",
-                "image_file": "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd"
-            },
-            {
                 "title": "Banana Bread",
-                "ingredients": "• Ripe bananas\n• Flour\n• Sugar\n• Eggs\n• Butter\n• Vanilla",
-                "preparation_time": "1 hour",
-                "instructions": "1. Mash bananas\n2. Mix ingredients\n3. Pour in pan\n4. Bake at 350°F",
-                "image_file": "https://images.unsplash.com/photo-1605286658031-68f5f1d3681e"
+                "ingredients": "• 3 very ripe bananas, mashed\n• 1/3 cup unsalted butter, melted\n• 1/2 cup granulated sugar\n• 1 large egg, room temperature\n• 1 tsp vanilla extract\n• 1 tsp baking soda\n• 1/4 tsp salt\n• 1 1/2 cups all-purpose flour\n• 1/4 tsp ground cinnamon\n• 1/2 cup chopped walnuts (optional)\n• 1/4 cup chocolate chips (optional)",
+                "preparation_time": "1 hour 15 minutes",
+                "instructions": "1. Preheat oven to 350°F (175°C)\n2. Grease a 4x8-inch loaf pan, line with parchment\n3. Mash bananas thoroughly in large bowl until no large chunks remain\n4. Mix in melted butter until completely combined\n5. Stir in sugar, beaten egg, and vanilla until well blended\n6. Sprinkle baking soda and salt over mixture\n7. Add cinnamon and stir to combine\n8. Fold in flour gently, mixing just until no dry streaks remain\n9. Fold in nuts and/or chocolate chips if using\n10. Pour batter into prepared pan, smooth top\n11. Bake 50-60 minutes until toothpick comes out clean\n12. Cool in pan 10 minutes on wire rack\n13. Remove from pan and cool completely\n14. Store wrapped tightly at room temperature",
+                "image_file": "https://images.unsplash.com/photo-1621994153189-6223b41f7912"
             },
             {
-                "title": "Quinoa Bowl",
-                "ingredients": "• Quinoa\n• Roasted vegetables\n• Chickpeas\n• Avocado\n• Tahini dressing",
+                "title": "Mediterranean Quinoa Bowl",
+                "ingredients": "• 1 cup quinoa, rinsed\n• 2 cups vegetable broth\n• 1 (15 oz) can chickpeas, drained and rinsed\n• 2 cups cherry tomatoes, halved\n• 1 cucumber, diced\n• 1/2 red onion, finely chopped\n• 1/2 cup kalamata olives, pitted\n• 1/2 cup feta cheese, crumbled\n• 1/4 cup fresh parsley, chopped\nDressing:\n• 3 tbsp olive oil\n• 2 tbsp lemon juice\n• 2 cloves garlic, minced\n• 1 tsp dried oregano\n• Salt and pepper to taste",
                 "preparation_time": "30 minutes",
-                "instructions": "1. Cook quinoa\n2. Roast vegetables\n3. Prepare dressing\n4. Assemble bowl",
+                "instructions": "1. Rinse quinoa thoroughly in fine mesh strainer\n2. Bring broth to boil in medium saucepan\n3. Add quinoa, reduce heat to low\n4. Cover and simmer 18-20 minutes\n5. Remove from heat, let stand 5 minutes\n6. Fluff with fork, let cool slightly\n7. Meanwhile, prepare vegetables:\n   - Halve tomatoes\n   - Dice cucumber into 1/2 inch pieces\n   - Finely chop onion\n   - Drain and rinse chickpeas\n8. Make dressing:\n   - Whisk olive oil, lemon juice, garlic\n   - Add oregano, salt, and pepper\n9. In large bowl, combine quinoa and vegetables\n10. Add olives and chickpeas\n11. Pour dressing over, toss gently\n12. Top with feta and parsley\n13. Serve at room temperature or chilled",
                 "image_file": "https://images.unsplash.com/photo-1543362906-acfc16c67564"
             },
             {
-                "title": "Fish Tacos",
-                "ingredients": "• White fish\n• Cabbage slaw\n• Lime crema\n• Tortillas\n• Avocado",
-                "preparation_time": "25 minutes",
-                "instructions": "1. Cook fish\n2. Make slaw\n3. Prepare crema\n4. Assemble tacos",
-                "image_file": "https://images.unsplash.com/photo-1512838243191-e81e8f66f1fd"
-            },
-            {
-                "title": "Chia Pudding",
-                "ingredients": "• Chia seeds\n• Almond milk\n• Honey\n• Fresh fruits\n• Nuts",
-                "preparation_time": "5 minutes + overnight",
-                "instructions": "1. Mix ingredients\n2. Refrigerate overnight\n3. Add toppings\n4. Serve chilled",
-                "image_file": "https://images.unsplash.com/photo-1458644267420-66bc8a5f21e4"
-            },
-            {
-                "title": "Pesto Pasta",
-                "ingredients": "• Spaghetti\n• Fresh basil\n• Pine nuts\n• Garlic\n• Parmesan\n• Olive oil",
+                "title": "Garlic Bread",
+                "ingredients": "• 1 French baguette\n• 1/2 cup unsalted butter, softened\n• 4 cloves garlic, finely minced\n• 2 tbsp fresh parsley, finely chopped\n• 1/4 cup freshly grated Parmesan cheese\n• 1/4 tsp salt\n• 1/8 tsp black pepper\n• 1/4 tsp Italian seasoning (optional)\n• Pinch of red pepper flakes (optional)",
                 "preparation_time": "20 minutes",
-                "instructions": "1. Cook pasta\n2. Blend pesto ingredients\n3. Combine\n4. Top with cheese",
-                "image_file": "https://images.unsplash.com/photo-1473093226795-af9932fe5856"
-            },
-            {
-                "title": "Overnight Oats",
-                "ingredients": "• Rolled oats\n• Milk\n• Yogurt\n• Chia seeds\n• Honey\n• Berries",
-                "preparation_time": "5 minutes + overnight",
-                "instructions": "1. Mix ingredients\n2. Refrigerate overnight\n3. Add toppings\n4. Enjoy cold",
-                "image_file": "https://images.unsplash.com/photo-1517673132405-a56a62b18caf"
-            },
-            {
-                "title": "Beef Stir Fry",
-                "ingredients": "• Beef strips\n• Bell peppers\n• Broccoli\n• Soy sauce\n• Ginger\n• Rice",
-                "preparation_time": "30 minutes",
-                "instructions": "1. Cook rice\n2. Stir fry beef\n3. Add vegetables\n4. Mix with sauce",
-                "image_file": "https://images.unsplash.com/photo-1534939561126-855b8675edd7"
-            },
-            {
-                "title": "Mediterranean Hummus Bowl",
-                "ingredients": "• Hummus\n• Cherry tomatoes\n• Cucumber\n• Olives\n• Feta\n• Pita bread",
-                "preparation_time": "15 minutes",
-                "instructions": "1. Spread hummus\n2. Arrange toppings\n3. Drizzle olive oil\n4. Serve with pita",
-                "image_file": "https://images.unsplash.com/photo-1540914124281-342587941389"
-            },
-            {
-                "title": "Mango Lassi",
-                "ingredients": "• Ripe mango\n• Yogurt\n• Milk\n• Cardamom\n• Honey\n• Ice",
-                "preparation_time": "10 minutes",
-                "instructions": "1. Blend mango\n2. Add yogurt and milk\n3. Add spices\n4. Serve chilled",
-                "image_file": "https://images.unsplash.com/photo-1546173159-315724a31696"
+                "instructions": "1. Preheat oven to 400°F (200°C)\n2. Cut baguette in half lengthwise\n3. In a bowl, mix softened butter until creamy\n4. Add minced garlic, mix well\n5. Stir in parsley, Parmesan, salt, and pepper\n6. Add Italian seasoning and red pepper if using\n7. Spread mixture evenly on both bread halves\n8. Place on baking sheet, cut sides up\n9. Bake 10-12 minutes until edges are golden\n10. Optional: broil 1-2 minutes for extra crispiness\n11. Let cool 2-3 minutes\n12. Slice diagonally into 2-inch pieces\n13. Serve immediately while warm",
+                "image_file": "https://images.unsplash.com/photo-1608198093002-ad4e005484ec"
             },
             {
                 "title": "Lemon Garlic Shrimp",
-                "ingredients": "• Shrimp\n• Garlic\n• Lemon\n• Butter\n• Parsley\n• White wine",
+                "ingredients": "• 1 lb large shrimp (16-20 count), peeled and deveined\n• 4 cloves garlic, minced\n• 1 lemon, juiced and zested\n• 4 tbsp unsalted butter\n• 2 tbsp olive oil\n• 1/4 cup dry white wine\n• 1/4 cup fresh parsley, chopped\n• 1/2 tsp salt\n• 1/4 tsp black pepper\n• 1/4 tsp red pepper flakes (optional)\n• Extra lemon wedges for serving",
                 "preparation_time": "20 minutes",
-                "instructions": "1. Melt butter\n2. Cook garlic\n3. Add shrimp\n4. Finish with lemon",
-                "image_file": "https://images.unsplash.com/photo-1625943553852-781c212b8079"
-            },
-            {
-                "title": "Acai Bowl",
-                "ingredients": "• Acai packet\n• Banana\n• Berries\n• Granola\n• Honey\n• Coconut",
-                "preparation_time": "10 minutes",
-                "instructions": "1. Blend acai\n2. Pour in bowl\n3. Add toppings\n4. Drizzle honey",
-                "image_file": "https://images.unsplash.com/photo-1590301157890-4810ed352733"
-            },
-            {
-                "title": "Veggie Wrap",
-                "ingredients": "• Tortilla\n• Hummus\n• Mixed greens\n• Avocado\n• Carrots\n• Cucumber",
-                "preparation_time": "15 minutes",
-                "instructions": "1. Spread hummus\n2. Layer vegetables\n3. Add avocado\n4. Roll tightly",
-                "image_file": "https://images.unsplash.com/photo-1600850056064-a8b380df8395"
-            },
-            {
-                "title": "Chicken Noodle Soup",
-                "ingredients": "• Chicken breast\n• Egg noodles\n• Carrots\n• Celery\n• Onion\n• Broth",
-                "preparation_time": "45 minutes",
-                "instructions": "1. Cook chicken\n2. Prepare vegetables\n3. Add noodles\n4. Simmer",
-                "image_file": "https://images.unsplash.com/photo-1547592166-23ac45744acd"
-            },
-            {
-                "title": "Apple Cinnamon Oatmeal",
-                "ingredients": "• Rolled oats\n• Apple\n• Cinnamon\n• Honey\n• Walnuts\n• Milk",
-                "preparation_time": "15 minutes",
-                "instructions": "1. Cook oats\n2. Add apple\n3. Stir in cinnamon\n4. Top with nuts",
-                "image_file": "https://images.unsplash.com/photo-1517673400267-0251440c45dc"
-            },
-            {
-                "title": "Grilled Cheese Sandwich",
-                "ingredients": "• Sourdough bread\n• Cheddar cheese\n• Butter\n• Optional: tomato\n• Optional: ham",
-                "preparation_time": "10 minutes",
-                "instructions": "1. Butter bread\n2. Add cheese\n3. Grill until golden\n4. Slice and serve",
-                "image_file": "https://images.unsplash.com/photo-1528735602780-2552fd46c7af"
-            },
-            {
-                "title": "Fresh Spring Rolls",
-                "ingredients": "• Rice paper\n• Shrimp\n• Rice noodles\n• Lettuce\n• Mint\n• Peanut sauce",
-                "preparation_time": "30 minutes",
-                "instructions": "1. Prep ingredients\n2. Soak rice paper\n3. Roll ingredients\n4. Serve with sauce",
-                "image_file": "https://images.unsplash.com/photo-1536510233921-8e5043fce771"
-            },
-            {
-                "title": "Roasted Vegetables",
-                "ingredients": "• Brussels sprouts\n• Carrots\n• Sweet potato\n• Olive oil\n• Herbs\n• Garlic",
-                "preparation_time": "40 minutes",
-                "instructions": "1. Cut vegetables\n2. Season well\n3. Roast at 400°F\n4. Serve hot",
-                "image_file": "https://images.unsplash.com/photo-1546793665-c74683f339c1"
-            },
-            {
-                "title": "Protein Smoothie",
-                "ingredients": "• Protein powder\n• Banana\n• Almond milk\n• Peanut butter\n• Ice\n• Honey",
-                "preparation_time": "5 minutes",
-                "instructions": "1. Add ingredients\n2. Blend until smooth\n3. Check consistency\n4. Serve cold",
-                "image_file": "https://images.unsplash.com/photo-1553530666-ba11a7da3888"
-            },
-            {
-                "title": "Garlic Bread",
-                "ingredients": "• French bread\n• Butter\n• Garlic\n• Parsley\n• Parmesan\n• Olive oil",
-                "preparation_time": "15 minutes",
-                "instructions": "1. Mix butter & garlic\n2. Spread on bread\n3. Bake until crispy\n4. Garnish",
-                "image_file": "https://images.unsplash.com/photo-1619535860434-da906327f876"
-            },
-            {
-                "title": "Chocolate Mousse",
-                "ingredients": "• Dark chocolate\n• Heavy cream\n• Eggs\n• Sugar\n• Vanilla extract",
-                "preparation_time": "3 hours",
-                "instructions": "1. Melt chocolate\n2. Whip cream\n3. Fold together\n4. Chill",
-                "image_file": "https://images.unsplash.com/photo-1541783245831-57d6fb0926d3"
-            },
-            {
-                "title": "Bruschetta",
-                "ingredients": "• Baguette\n• Tomatoes\n• Basil\n• Garlic\n• Olive oil\n• Balsamic",
-                "preparation_time": "20 minutes",
-                "instructions": "1. Toast bread\n2. Mix topping\n3. Assemble\n4. Drizzle oil",
-                "image_file": "https://images.unsplash.com/photo-1572695157366-5e585ab2b69f"
-            },
-            {
-                "title": "Fruit Salad",
-                "ingredients": "• Mixed berries\n• Apple\n• Orange\n• Grapes\n• Honey\n• Mint",
-                "preparation_time": "15 minutes",
-                "instructions": "1. Cut fruits\n2. Combine in bowl\n3. Add honey\n4. Garnish with mint",
-                "image_file": "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea"
-            },
-            {
-                "title": "Mushroom Soup",
-                "ingredients": "• Mixed mushrooms\n• Onion\n• Garlic\n• Cream\n• Thyme\n• Stock",
-                "preparation_time": "35 minutes",
-                "instructions": "1. Sauté vegetables\n2. Add stock\n3. Blend smooth\n4. Add cream",
-                "image_file": "https://images.unsplash.com/photo-1547592166-23ac45744acd"
-            },
-            {
-                "title": "Energy Balls",
-                "ingredients": "• Dates\n• Nuts\n• Oats\n• Cocoa powder\n• Honey\n• Coconut",
-                "preparation_time": "20 minutes",
-                "instructions": "1. Process dates\n2. Mix ingredients\n3. Form balls\n4. Roll in coconut",
-                "image_file": "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26"
+                "instructions": "1. Pat shrimp completely dry with paper towels\n2. Season shrimp with salt and pepper\n3. Heat olive oil and 2 tbsp butter in large skillet over medium-high\n4. Add garlic, cook 30 seconds until fragrant\n5. Add shrimp in single layer (don't crowd)\n6. Cook 2-3 minutes until bottom side is pink\n7. Flip each shrimp, cook 1-2 minutes more\n8. Remove shrimp to a plate\n9. Add wine to pan, simmer 2 minutes\n10. Add lemon juice and zest\n11. Stir in remaining butter until melted\n12. Return shrimp to pan\n13. Add parsley and red pepper flakes if using\n14. Toss until shrimp is coated and heated through\n15. Serve immediately with lemon wedges\n16. Optional: serve over pasta or rice",
+                "image_file": "https://images.unsplash.com/photo-1559742811-822873691df8"
             }
         ]
 
         for recipe_data in recipes:
-            recipe = Recipe(
-                title=recipe_data["title"],
-                ingredients=recipe_data["ingredients"],
-                preparation_time=recipe_data["preparation_time"],
-                instructions=recipe_data["instructions"],
-                image_file=recipe_data["image_file"],
-                user_id=official.id
-            )
-            db.session.add(recipe)
+            existing_recipe = Recipe.query.filter_by(title=recipe_data["title"], user_id=official.id).first()
+            if not existing_recipe:
+                recipe = Recipe(
+                    title=recipe_data["title"],
+                    ingredients=recipe_data["ingredients"],
+                    preparation_time=recipe_data["preparation_time"],
+                    instructions=recipe_data["instructions"],
+                    image_file=recipe_data["image_file"],
+                    user_id=official.id
+                )
+                db.session.add(recipe)
         
         db.session.commit()
         return "Official account and recipes created!"
