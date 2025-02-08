@@ -531,10 +531,15 @@ def get_mood_recipes():
     mood = request.form.get('mood')
     all_recipes = Recipe.query.all()
     recommended_recipes = get_recipe_recommendations(mood, all_recipes)
+    
     return jsonify([{
+        'id': recipe.id,
         'title': recipe.title,
-        'image': recipe.image_file,
-        'preparation_time': recipe.preparation_time
+        'image_file': recipe.image_file,
+        'preparation_time': recipe.preparation_time,
+        'views': recipe.views,
+        'has_been_top': recipe.has_been_top,
+        'date_posted': recipe.date_posted.strftime('%B %d, %Y')
     } for recipe in recommended_recipes])
 
 # Configure Cloudinary
