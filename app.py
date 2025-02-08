@@ -8,9 +8,20 @@ import os
 from PIL import Image
 import io
 
+# Near the top of your file, after imports
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'letsgo123'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///recipes.db'
+
+# Database configuration
+if os.environ.get('RENDER'):
+    # For Render.com deployment - use PostgreSQL
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL').replace('postgres://', 'postgresql://')
+else:
+    # For local development - use SQLite
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(basedir, "recipes.db")}'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=365 * 10)
 app.config['REMEMBER_COOKIE_DURATION'] = timedelta(days=365 * 10)
