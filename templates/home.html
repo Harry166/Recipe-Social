@@ -76,4 +76,74 @@
     </div>
     {% endfor %}
 </div>
+
+<!-- Add this to your existing <style> section -->
+<style>
+    /* ... your existing styles ... */
+
+    .mood-selector {
+        width: 200px;
+        margin: 20px auto;
+    }
+
+    .mood-selector select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+        background-color: white;
+    }
+
+    .mood-selector select:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0,123,255,0.3);
+    }
+
+    /* Optional: Style for the emoji in options */
+    .mood-selector option {
+        padding: 10px;
+    }
+</style>
+
+<!-- Replace your search bar with this -->
+<div class="mood-selector">
+    <select id="moodSelect">
+        <option value="">What's your mood?</option>
+        <option value="Happy">Happy 😊</option>
+        <option value="Sad">Sad 😢</option>
+        <option value="Energetic">Energetic 💪</option>
+        <option value="Tired">Tired 😴</option>
+        <option value="Stressed">Stressed 😰</option>
+        <option value="Adventurous">Adventurous 🌎</option>
+    </select>
+</div>
+
+<!-- Add this JavaScript section before the closing </body> tag -->
+<script>
+document.getElementById('moodSelect').addEventListener('change', function() {
+    const mood = this.value;
+    if (mood) {
+        fetch('/get_mood_recipes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `mood=${mood}`
+        })
+        .then(response => response.json())
+        .then(recipes => {
+            const recipeContainer = document.querySelector('.recipe-grid');
+            recipeContainer.innerHTML = recipes.map(recipe => `
+                <div class="recipe-card">
+                    <img src="${recipe.image}" alt="${recipe.title}">
+                    <h3>${recipe.title}</h3>
+                    <p>Prep time: ${recipe.preparation_time}</p>
+                </div>
+            `).join('');
+        });
+    }
+});
+</script>
 {% endblock %}

@@ -10,6 +10,9 @@ import io
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
 
 # Near the top of your file, after imports
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -133,6 +136,42 @@ def load_user(user_id):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Add these mood mappings
+MOOD_MAPPINGS = {
+    "Happy": ["fresh", "bright", "colorful", "light", "energizing", "sweet", "fruity"],
+    "Sad": ["comfort", "warm", "creamy", "chocolate", "hearty", "rich"],
+    "Energetic": ["protein", "healthy", "fresh", "smoothie", "light", "citrus"],
+    "Tired": ["easy", "quick", "simple", "comforting", "warm"],
+    "Stressed": ["soothing", "simple", "comfort", "warm", "familiar"],
+    "Adventurous": ["spicy", "exotic", "unique", "international", "complex"]
+}
+
+def get_recipe_recommendations(mood, recipes, num_recommendations=5):
+    # Create a string representation of each recipe
+    recipe_texts = []
+    for recipe in recipes:
+        text = f"{recipe.title} {recipe.ingredients} {recipe.instructions}"
+        recipe_texts.append(text.lower())
+    
+    # Create mood text from mapping
+    mood_keywords = " ".join(MOOD_MAPPINGS.get(mood, []))
+    
+    # Add mood text to the documents
+    all_texts = recipe_texts + [mood_keywords]
+    
+    # Create TF-IDF vectors
+    vectorizer = TfidfVectorizer(stop_words='english')
+    tfidf_matrix = vectorizer.fit_transform(all_texts)
+    
+    # Calculate similarity between mood and recipes
+    mood_vector = tfidf_matrix[-1]
+    recipe_vectors = tfidf_matrix[:-1]
+    similarities = cosine_similarity(recipe_vectors, mood_vector)
+    
+    # Get top recommendations
+    top_indices = similarities.flatten().argsort()[-num_recommendations:][::-1]
+    return [recipes[i] for i in top_indices]
 
 @app.route('/')
 def home():
@@ -486,6 +525,17 @@ def create_test_recipe():
         return "Test recipe created with real image!"
     except Exception as e:
         return f"Error: {str(e)}"
+
+@app.route('/get_mood_recipes', methods=['POST'])
+def get_mood_recipes():
+    mood = request.form.get('mood')
+    all_recipes = Recipe.query.all()
+    recommended_recipes = get_recipe_recommendations(mood, all_recipes)
+    return jsonify([{
+        'title': recipe.title,
+        'image': recipe.image_file,
+        'preparation_time': recipe.preparation_time
+    } for recipe in recommended_recipes])
 
 # Configure Cloudinary
 cloudinary.config( 
