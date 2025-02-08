@@ -339,6 +339,18 @@ def db_status():
     except Exception as e:
         return jsonify({'status': 'Database error', 'error': str(e)}), 500
 
+@app.route('/refresh-all')
+def refresh_all():
+    try:
+        with app.app_context():
+            # Drop all tables
+            db.drop_all()
+            # Recreate all tables
+            db.create_all()
+            return "Database completely refreshed!"
+    except Exception as e:
+        return f"Error: {str(e)}"
+
 # Configure Cloudinary
 cloudinary.config( 
     cloud_name = "dxxxzdjmv",
