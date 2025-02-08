@@ -7,6 +7,9 @@ from werkzeug.utils import secure_filename
 import os
 from PIL import Image
 import io
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 # Near the top of your file, after imports
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -37,9 +40,12 @@ else:
     PROFILE_UPLOAD_FOLDER = 'static/uploads/profiles'
 
 # Create directories if they don't exist
-os.makedirs('static', exist_ok=True)
-os.makedirs('static/uploads', exist_ok=True)
-os.makedirs('static/uploads/profiles', exist_ok=True)
+if os.environ.get('RENDER'):
+    os.makedirs('/tmp/uploads', exist_ok=True)
+    os.makedirs('/tmp/uploads/profiles', exist_ok=True)
+else:
+    os.makedirs('static/uploads', exist_ok=True)
+    os.makedirs('static/uploads/profiles', exist_ok=True)
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
@@ -79,17 +85,10 @@ class User(UserMixin, db.Model):
     )
 
     def save_profile_pic(self, picture_data):
-        # Resize and save profile picture
-        img = Image.open(picture_data)
-        if img.height > 500 or img.width > 500:
-            output_size = (500, 500)
-            img.thumbnail(output_size)
-        
-        # Save the image
-        filename = secure_filename(f'profile_{self.username}.jpg')
-        img_path = os.path.join(PROFILE_UPLOAD_FOLDER, filename)
-        img.save(img_path)
-        return filename
+        # Upload to Cloudinary
+        result = cloudinary.uploader.upload(picture_data)
+        self.profile_pic = result['secure_url']
+        return self.profile_pic
 
     def like_recipe(self, recipe):
         if not self.has_liked_recipe(recipe):
@@ -202,18 +201,14 @@ def logout():
 def new_recipe():
     if request.method == 'POST':
         try:
-            # Handle image upload
             file = request.files['image']
             filename = 'default.jpg'
             
             if file and file.filename != '':
                 if allowed_file(file.filename):
-                    # Create upload directory if it doesn't exist
-                    os.makedirs('static/uploads', exist_ok=True)
-                    
-                    filename = secure_filename(file.filename)
-                    filepath = os.path.join('static/uploads', filename)
-                    file.save(filepath)
+                    # Upload to Cloudinary
+                    result = cloudinary.uploader.upload(file)
+                    filename = result['secure_url']
                 else:
                     flash('Invalid file type. Please use jpg, jpeg, png, or gif.', 'danger')
                     return render_template('create_recipe.html')
@@ -350,6 +345,13 @@ def db_status():
         return jsonify({'status': 'Database is working'})
     except Exception as e:
         return jsonify({'status': 'Database error', 'error': str(e)}), 500
+
+# Configure Cloudinary
+cloudinary.config( 
+    cloud_name = "dxxxzdjmv",
+    api_key = "992923442213286", 
+    api_secret = "iMGp_riYsXFsfcaldx3bZdCHC4g"
+)
 
 if __name__ == '__main__' or os.environ.get('RENDER'):  # Add the RENDER check
     with app.app_context():
