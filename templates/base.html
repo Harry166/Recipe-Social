@@ -280,15 +280,19 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarContent">
-                <form class="d-flex mx-lg-auto my-2 my-lg-0" action="{{ url_for('search') }}" method="GET">
+                <div class="d-flex mx-lg-auto my-2 my-lg-0">
                     <div class="input-group">
-                        <input class="form-control" type="search" name="q" placeholder="Search recipes..." 
-                               aria-label="Search" value="{{ request.args.get('q', '') }}">
-                        <button class="btn btn-create" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
+                        <select class="form-control" id="moodSelect" style="border-radius: 25px; border: 2px solid var(--accent-color);">
+                            <option value="">What are you in the mood for? 🍽️</option>
+                            <option value="Happy">Bright & Fresh 😊</option>
+                            <option value="Sad">Comfort Food 🤗</option>
+                            <option value="Energetic">Healthy & Light 💪</option>
+                            <option value="Tired">Quick & Easy 😴</option>
+                            <option value="Stressed">Soothing & Warm 😌</option>
+                            <option value="Adventurous">Bold & Spicy 🌎</option>
+                        </select>
                     </div>
-                </form>
+                </div>
                 
                 <div class="navbar-nav ms-auto">
                     {% if current_user.is_authenticated %}
@@ -392,6 +396,25 @@
                 });
             });
         });
+    });
+    </script>
+
+    <script>
+    document.getElementById('moodSelect').addEventListener('change', function() {
+        const mood = this.value;
+        if (mood) {
+            fetch('/get_mood_recipes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `mood=${mood}`
+            })
+            .then(response => response.json())
+            .then(recipes => {
+                window.location.href = '/?mood=' + encodeURIComponent(mood);
+            });
+        }
     });
     </script>
 </body>
