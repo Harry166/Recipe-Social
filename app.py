@@ -281,16 +281,12 @@ def setup_profile():
             file = request.files['profile_pic']
             if file and file.filename != '':
                 try:
-                    # Create directories if they don't exist
-                    os.makedirs('static/uploads/profiles', exist_ok=True)
-                    
-                    filename = secure_filename(file.filename)
-                    filepath = os.path.join('static/uploads/profiles', filename)
-                    file.save(filepath)
-                    current_user.profile_pic = filename
+                    # Upload directly to Cloudinary
+                    result = cloudinary.uploader.upload(file)
+                    current_user.profile_pic = result['secure_url']
                     db.session.commit()
                 except Exception as e:
-                    print(f"Upload error: {str(e)}")  # For debugging
+                    print(f"Upload error: {str(e)}")
                     flash('Error uploading file', 'danger')
                     return render_template('setup_profile.html')
 
