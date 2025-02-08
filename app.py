@@ -365,15 +365,20 @@ def test_upload():
 @app.route('/setup-official-content')
 def setup_official_content():
     try:
-        official = User(
-            username="Recipe Social",
-            email="official@recipesocial.com",
-            password=generate_password_hash("securepassword123"),
-            bio="The official Recipe Social account.",
-            profile_pic="https://images.unsplash.com/photo-1556911261-6bd341186b2f"
-        )
-        db.session.add(official)
-        db.session.commit()
+        # Check if official account exists
+        official = User.query.filter_by(username="Recipe Social").first()
+        
+        if not official:
+            # Create only if it doesn't exist
+            official = User(
+                username="Recipe Social",
+                email="official@recipesocial.com",
+                password=generate_password_hash("securepassword123"),
+                bio="The official Recipe Social account.",
+                profile_pic="https://images.unsplash.com/photo-1556911261-6bd341186b2f"
+            )
+            db.session.add(official)
+            db.session.commit()
 
         recipes = [
             {
