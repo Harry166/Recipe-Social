@@ -342,7 +342,22 @@ def unfollow(username):
 def about():
     return render_template('about.html')
 
-if __name__ == '__main__':
+@app.route('/db-status')
+def db_status():
+    try:
+        # Try to query the database
+        User.query.first()
+        return jsonify({'status': 'Database is working'})
+    except Exception as e:
+        return jsonify({'status': 'Database error', 'error': str(e)}), 500
+
+if __name__ == '__main__' or os.environ.get('RENDER'):  # Add the RENDER check
     with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+        try:
+            db.create_all()
+            print("Database tables created successfully!")
+        except Exception as e:
+            print(f"Error creating database tables: {str(e)}")
+    
+    if __name__ == '__main__':
+        app.run(debug=True)
