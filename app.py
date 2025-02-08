@@ -147,48 +147,42 @@ MOOD_MAPPINGS = {
     "Adventurous": ["spicy", "exotic", "unique", "international", "complex"]
 }
 
-def get_recipe_recommendations(mood, recipes, num_recommendations=5):
-    # Create a string representation of each recipe
+def get_recipe_recommendations(mood, recipes, num_recommendations=10):
+    if not recipes:
+        return []
+        
     recipe_texts = []
     for recipe in recipes:
         text = f"{recipe.title} {recipe.ingredients} {recipe.instructions}"
         recipe_texts.append(text.lower())
     
-    # Create mood text from mapping
     mood_keywords = " ".join(MOOD_MAPPINGS.get(mood, []))
-    
-    # Add mood text to the documents
     all_texts = recipe_texts + [mood_keywords]
     
-    # Create TF-IDF vectors
     vectorizer = TfidfVectorizer(stop_words='english')
     tfidf_matrix = vectorizer.fit_transform(all_texts)
     
-    # Calculate similarity between mood and recipes
     mood_vector = tfidf_matrix[-1]
     recipe_vectors = tfidf_matrix[:-1]
     similarities = cosine_similarity(recipe_vectors, mood_vector)
     
-    # Get top recommendations
     top_indices = similarities.flatten().argsort()[-num_recommendations:][::-1]
     return [recipes[i] for i in top_indices]
 
 @app.route('/')
 def home():
-    # Query recipes and order by number of likes
-    top_recipes = Recipe.query.join(likes).group_by(Recipe.id)\
-        .order_by(db.func.count(likes.c.user_id).desc())\
-        .limit(3).all()
+    mood = request.args.get('mood')
+    top_recipes = Recipe.query.order_by(Recipe.views.desc()).limit(3).all()
     
-    # Mark current top recipes
-    for recipe in top_recipes:
-        if not recipe.has_been_top:
-            recipe.has_been_top = True
-            db.session.add(recipe)
-    db.session.commit()
+    if mood:
+        all_recipes = Recipe.query.all()
+        filtered_recipes = get_recipe_recommendations(mood, all_recipes)
+    else:
+        filtered_recipes = Recipe.query.order_by(Recipe.date_posted.desc()).all()
     
-    all_recipes = Recipe.query.order_by(Recipe.date_posted.desc()).all()
-    return render_template('home.html', top_recipes=top_recipes, all_recipes=all_recipes)
+    return render_template('home.html', 
+                         top_recipes=top_recipes, 
+                         all_recipes=filtered_recipes)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -528,19 +522,27 @@ def create_test_recipe():
 
 @app.route('/get_mood_recipes', methods=['POST'])
 def get_mood_recipes():
-    mood = request.form.get('mood')
-    all_recipes = Recipe.query.all()
-    recommended_recipes = get_recipe_recommendations(mood, all_recipes)
-    
-    return jsonify([{
-        'id': recipe.id,
-        'title': recipe.title,
-        'image_file': recipe.image_file,
-        'preparation_time': recipe.preparation_time,
-        'views': recipe.views,
-        'has_been_top': recipe.has_been_top,
-        'date_posted': recipe.date_posted.strftime('%B %d, %Y')
-    } for recipe in recommended_recipes])
+    try:
+        mood = request.form.get('mood')
+        if not mood:
+            return jsonify([])
+            
+        all_recipes = Recipe.query.all()
+        recommended_recipes = get_recipe_recommendations(mood, all_recipes)
+        
+        return jsonify([{
+            'id': recipe.id,
+            'title': recipe.title,
+            'image_file': recipe.image_file,
+            'preparation_time': recipe.preparation_time,
+            'views': recipe.views,
+            'has_been_top': recipe.has_been_top,
+            'date_posted': recipe.date_posted.strftime('%B %d, %Y'),
+            'likes': len(recipe.liked_by.all())
+        } for recipe in recommended_recipes])
+    except Exception as e:
+        print(f"Error in get_mood_recipes: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 # Configure Cloudinary
 cloudinary.config( 
