@@ -480,8 +480,9 @@ def create_recipe():
             title = request.form.get('title')
             ingredients = '\n'.join(request.form.getlist('ingredients[]'))
             instructions = request.form.get('instructions')
-            # Add "minutes" to preparation time
-            preparation_time = f"{request.form.get('preparation_time')} minutes"
+            # Get the time value and ensure it includes "minutes"
+            time_value = request.form.get('preparation_time')
+            preparation_time = f"{time_value} minutes" if not time_value.endswith('minutes') else time_value
             
             # Handle image upload
             image_file = request.files.get('image')
