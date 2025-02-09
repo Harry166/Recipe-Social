@@ -19,7 +19,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ recipe.title }}</h5>
                 <p class="card-text small">
-                    <i class="fas fa-clock"></i> {{ recipe.preparation_time }} mins |
+                    <i class="fas fa-clock"></i> {{ recipe.preparation_time }} |
                     <i class="fas fa-eye"></i> {{ recipe.views }} views |
                     <i class="fas fa-calendar"></i> {{ recipe.date_posted.strftime('%B %d, %Y') }} |
                     <span class="like-button" data-recipe-id="{{ recipe.id }}">
@@ -58,7 +58,7 @@
             <div class="card-body">
                 <h5 class="card-title">{{ recipe.title }}</h5>
                 <p class="card-text small">
-                    <i class="fas fa-clock"></i> {{ recipe.preparation_time }} mins |
+                    <i class="fas fa-clock"></i> {{ recipe.preparation_time }} |
                     <i class="fas fa-eye"></i> {{ recipe.views }} views |
                     <i class="fas fa-calendar"></i> {{ recipe.date_posted.strftime('%B %d, %Y') }} |
                     <span class="like-button" data-recipe-id="{{ recipe.id }}">

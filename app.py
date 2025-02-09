@@ -581,6 +581,15 @@ def create_recipe():
         
     return render_template('create_recipe.html', title='New Recipe')
 
+def save_picture(picture_file):
+    try:
+        # Upload to Cloudinary
+        result = cloudinary.uploader.upload(picture_file)
+        return result['secure_url']
+    except Exception as e:
+        print(f"Upload error: {str(e)}")
+        return 'default.jpg'
+
 # Configure Cloudinary
 cloudinary.config( 
     cloud_name = "dxxxzdjmv",
