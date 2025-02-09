@@ -406,7 +406,12 @@
     <script>
     document.getElementById('moodSelect').addEventListener('change', function() {
         const mood = this.value;
+        const topRecipesSection = document.getElementById('top-recipes-container').parentElement;
+        
         if (mood) {
+            // Hide top recipes section
+            topRecipesSection.style.display = 'none';
+            
             fetch('/get_mood_recipes', {
                 method: 'POST',
                 headers: {
@@ -428,7 +433,7 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${recipe.title}</h5>
                                     <p class="card-text small">
-                                        <i class="fas fa-clock"></i> ${recipe.preparation_time} mins |
+                                        <i class="fas fa-clock"></i> ${recipe.preparation_time} minutes |
                                         <i class="fas fa-eye"></i> ${recipe.views} views |
                                         <i class="fas fa-calendar"></i> ${recipe.date_posted} |
                                         <span class="like-button">
@@ -447,7 +452,7 @@
                 console.error('Error:', error);
             });
         } else {
-            // If no mood is selected, refresh the page to show all recipes
+            // Show top recipes section and reload page
             window.location.reload();
         }
     });
