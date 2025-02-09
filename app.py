@@ -147,25 +147,29 @@ MOOD_MAPPINGS = {
     "Adventurous": ["spicy", "exotic", "unique", "international", "complex"]
 }
 
-def get_recipe_recommendations(mood, recipes, num_recommendations=10):
-    if not recipes:
-        return []
-        
+def get_recipe_recommendations(mood, recipes, num_recommendations=5):
+    # Create a string representation of each recipe
     recipe_texts = []
     for recipe in recipes:
         text = f"{recipe.title} {recipe.ingredients} {recipe.instructions}"
         recipe_texts.append(text.lower())
     
+    # Create mood text from mapping
     mood_keywords = " ".join(MOOD_MAPPINGS.get(mood, []))
+    
+    # Add mood text to the documents
     all_texts = recipe_texts + [mood_keywords]
     
+    # Create TF-IDF vectors
     vectorizer = TfidfVectorizer(stop_words='english')
     tfidf_matrix = vectorizer.fit_transform(all_texts)
     
+    # Calculate similarity between mood and recipes
     mood_vector = tfidf_matrix[-1]
     recipe_vectors = tfidf_matrix[:-1]
     similarities = cosine_similarity(recipe_vectors, mood_vector)
     
+    # Get top recommendations
     top_indices = similarities.flatten().argsort()[-num_recommendations:][::-1]
     return [recipes[i] for i in top_indices]
 
@@ -448,10 +452,12 @@ def create_test_recipe():
 def get_mood_recipes():
     try:
         mood = request.form.get('mood')
-        if not mood:
-            return jsonify([])
-            
         all_recipes = Recipe.query.all()
+        
+        # Check if we have any recipes
+        if not all_recipes:
+            return jsonify([])  # Return empty list if no recipes
+            
         recommended_recipes = get_recipe_recommendations(mood, all_recipes)
         
         return jsonify([{
@@ -466,7 +472,7 @@ def get_mood_recipes():
         } for recipe in recommended_recipes])
     except Exception as e:
         print(f"Error in get_mood_recipes: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify([])  # Return empty list on error
 
 @app.route("/sources")
 def sources():

@@ -406,11 +406,12 @@
     <script>
     document.getElementById('moodSelect').addEventListener('change', function() {
         const mood = this.value;
-        const topRecipesSection = document.getElementById('top-recipes-container').parentElement;
-        
         if (mood) {
             // Hide top recipes section
-            topRecipesSection.style.display = 'none';
+            const topRecipesSection = document.querySelector('h2:first-of-type').parentElement;
+            if (topRecipesSection) {
+                topRecipesSection.style.display = 'none';
+            }
             
             fetch('/get_mood_recipes', {
                 method: 'POST',
@@ -421,7 +422,7 @@
             })
             .then(response => response.json())
             .then(recipes => {
-                const allRecipesContainer = document.querySelector('.row:not(.mb-4)');
+                const allRecipesContainer = document.getElementById('all-recipes-container');
                 if (allRecipesContainer) {
                     allRecipesContainer.innerHTML = recipes.map(recipe => `
                         <div class="col-md-4 mb-4">
