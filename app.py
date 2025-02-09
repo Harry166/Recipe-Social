@@ -398,104 +398,28 @@ def test_upload():
 @app.route('/setup-official-content')
 def setup_official_content():
     try:
-        # First, delete all existing recipes from Recipe Social account
         official = User.query.filter_by(username="Recipe Social").first()
         if official:
-            # Delete all existing recipes for this user
-            Recipe.query.filter_by(user_id=official.id).delete()
+            # Update existing recipes' preparation times
+            recipes = Recipe.query.filter_by(user_id=official.id).all()
+            for recipe in recipes:
+                # Convert times like "1 hour 30 minutes" to "90 minutes"
+                current_time = recipe.preparation_time
+                if 'hour' in current_time.lower():
+                    # Parse the time and convert to minutes
+                    parts = current_time.lower().replace('minutes', '').replace('minute', '').replace('hours', 'hour').split('hour')
+                    hours = int(parts[0].strip())
+                    minutes = int(parts[1].strip()) if len(parts) > 1 and parts[1].strip() else 0
+                    total_minutes = hours * 60 + minutes
+                    recipe.preparation_time = f"{total_minutes} minutes"
+                elif not current_time.endswith('minutes'):
+                    # Add "minutes" if it's missing
+                    recipe.preparation_time = f"{current_time.strip()} minutes"
+            
             db.session.commit()
-        else:
-            # Create the official account if it doesn't exist
-            official = User(
-                username="Recipe Social",
-                email="official@recipesocial.com",
-                password=generate_password_hash("securepassword123"),
-                bio="The official Recipe Social account.",
-                profile_pic="https://images.unsplash.com/photo-1556911261-6bd341186b2f"
-            )
-            db.session.add(official)
-            db.session.commit()
-
-        # Then add all the recipes (rest of your code remains the same)
-        recipes = [
-            {
-                "title": "Classic Homemade Pizza",
-                "ingredients": "• 2 1/4 cups bread flour\n• 1 1/2 tsp instant yeast\n• 1 1/2 tsp salt\n• 1 cup warm water (110°F)\n• 2 tbsp olive oil\n• 1 cup pizza sauce\n• 2 cups mozzarella cheese, shredded\n• 1/4 cup fresh basil leaves\n• Optional toppings: pepperoni, mushrooms, bell peppers",
-                "preparation_time": "90 minutes",
-                "instructions": "1. In a large bowl, combine flour, yeast, and salt\n2. Add warm water and olive oil, mix until a shaggy dough forms\n3. Knead dough for 10 minutes until smooth and elastic\n4. Place in oiled bowl, cover with damp cloth\n5. Let rise in warm place for 1 hour or until doubled\n6. Preheat oven to 450°F with pizza stone if available\n7. Punch down dough and roll into 14-inch circle\n8. Transfer to parchment paper or cornmeal-dusted pan\n9. Spread sauce evenly, leaving 1/2 inch border\n10. Top with cheese and desired toppings\n11. Bake 12-15 minutes until crust is golden\n12. Garnish with fresh basil\n13. Let cool 5 minutes before slicing",
-                "image_file": "https://images.unsplash.com/photo-1513104890138-7c749659a591"
-            },
-            {
-                "title": "Creamy Mac and Cheese",
-                "ingredients": "• 1 pound elbow macaroni\n• 4 cups sharp cheddar cheese, freshly grated\n• 2 cups whole milk\n• 1/4 cup unsalted butter\n• 1/4 cup all-purpose flour\n• 1 tsp salt\n• 1/2 tsp black pepper\n• 1/4 tsp garlic powder\n• 1/8 tsp cayenne pepper (optional)\n• 1/4 cup breadcrumbs\n• 2 tbsp fresh parsley, chopped",
-                "preparation_time": "35 minutes",
-                "instructions": "1. Bring large pot of salted water to boil\n2. Cook macaroni 2 minutes less than package directions\n3. Meanwhile, melt butter in large saucepan over medium heat\n4. Whisk in flour and cook 1 minute, stirring constantly\n5. Gradually whisk in milk, cook until thickened (3-4 minutes)\n6. Reduce heat to low, add cheese in batches, stirring until melted\n7. Season with salt, pepper, garlic powder, and cayenne if using\n8. Drain pasta (don't rinse), return to pot\n9. Pour cheese sauce over pasta, mix thoroughly\n10. Transfer to baking dish if desired\n11. Top with breadcrumbs\n12. Optional: broil 2-3 minutes until golden\n13. Garnish with parsley and serve hot",
-                "image_file": "https://images.unsplash.com/photo-1543339494-b4cd4f7ba686"
-            },
-            {
-                "title": "Fresh Garden Salad",
-                "ingredients": "• 6 cups mixed salad greens\n• 1 cup cherry tomatoes, halved\n• 1 English cucumber, thinly sliced\n• 1/2 red onion, thinly sliced\n• 1 avocado, diced\n• 1/4 cup extra virgin olive oil\n• 2 tbsp balsamic vinegar\n• 1 tsp Dijon mustard\n• 1 clove garlic, minced\n• 1/2 tsp honey\n• Salt and pepper to taste\n• Optional: croutons, sunflower seeds",
-                "preparation_time": "15 minutes",
-                "instructions": "1. Wash and thoroughly dry all greens and vegetables\n2. Tear lettuce into bite-sized pieces if needed\n3. Halve cherry tomatoes\n4. Slice cucumber into thin rounds\n5. Soak sliced onion in cold water for 5 minutes to reduce sharpness\n6. Make dressing: whisk olive oil, vinegar, mustard, garlic, and honey\n7. Season dressing with salt and pepper to taste\n8. Drain onions and pat dry\n9. In large bowl, combine greens, tomatoes, cucumber, and onion\n10. Dice avocado just before serving\n11. Drizzle with dressing and toss gently\n12. Top with croutons and seeds if using\n13. Serve immediately",
-                "image_file": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd"
-            },
-            {
-                "title": "Breakfast Smoothie Bowl",
-                "ingredients": "• 2 frozen bananas, chunked\n• 1 cup frozen mixed berries\n• 1 cup Greek yogurt\n• 1/4 cup almond milk\n• 1 tbsp honey\n• 1 tbsp chia seeds\nToppings:\n• 1/4 cup granola\n• Fresh berries\n• Sliced banana\n• 1 tbsp almond butter\n• Coconut flakes\n• Extra honey for drizzling",
-                "preparation_time": "15 minutes",
-                "instructions": "1. Place frozen bananas and berries in high-speed blender\n2. Add yogurt, almond milk, and honey\n3. Blend until smooth but still thick (consistency should be thicker than drinkable)\n4. Add more milk 1 tbsp at a time if needed to blend\n5. Stir in chia seeds\n6. Pour into chilled bowl\n7. Arrange toppings in sections:\n   - Place granola on one side\n   - Add fresh berries in another section\n   - Fan out banana slices\n   - Drizzle with almond butter\n   - Sprinkle coconut flakes\n8. Finish with honey drizzle\n9. Serve immediately while cold",
-                "image_file": "https://images.unsplash.com/photo-1511690743698-d9d85f2fbf38"
-            },
-            {
-                "title": "Grilled Salmon",
-                "ingredients": "• 4 (6 oz) salmon fillets\n• 2 tbsp olive oil\n• 4 cloves garlic, minced\n• 1 lemon, juiced and zested\n• 2 tbsp fresh dill, chopped\n• 1 tsp salt\n• 1/2 tsp black pepper\n• 1/4 tsp red pepper flakes (optional)\n• Lemon wedges for serving",
-                "preparation_time": "25 minutes",
-                "instructions": "1. Pat salmon fillets dry with paper towels\n2. In small bowl, combine olive oil, garlic, lemon juice, zest, and dill\n3. Season fillets with salt and pepper on both sides\n4. Brush with oil mixture, let marinate 10 minutes\n5. Preheat grill to medium-high (400°F)\n6. Clean and oil grill grates well\n7. Place salmon skin-side up on grill\n8. Cook 4-5 minutes until grill marks appear\n9. Carefully flip using wide spatula\n10. Cook 3-4 minutes more until fish flakes easily\n11. Let rest 5 minutes before serving\n12. Garnish with extra dill and lemon wedges",
-                "image_file": "https://images.unsplash.com/photo-1485921325833-c519f76c4927"
-            },
-            {
-                "title": "Banana Bread",
-                "ingredients": "• 3 very ripe bananas, mashed\n• 1/3 cup unsalted butter, melted\n• 1/2 cup granulated sugar\n• 1 large egg, room temperature\n• 1 tsp vanilla extract\n• 1 tsp baking soda\n• 1/4 tsp salt\n• 1 1/2 cups all-purpose flour\n• 1/4 tsp ground cinnamon\n• 1/2 cup chopped walnuts (optional)\n• 1/4 cup chocolate chips (optional)",
-                "preparation_time": "75 minutes",
-                "instructions": "1. Preheat oven to 350°F (175°C)\n2. Grease a 4x8-inch loaf pan, line with parchment\n3. Mash bananas thoroughly in large bowl until no large chunks remain\n4. Mix in melted butter until completely combined\n5. Stir in sugar, beaten egg, and vanilla until well blended\n6. Sprinkle baking soda and salt over mixture\n7. Add cinnamon and stir to combine\n8. Fold in flour gently, mixing just until no dry streaks remain\n9. Fold in nuts and/or chocolate chips if using\n10. Pour batter into prepared pan, smooth top\n11. Bake 50-60 minutes until toothpick comes out clean\n12. Cool in pan 10 minutes on wire rack\n13. Remove from pan and cool completely\n14. Store wrapped tightly at room temperature",
-                "image_file": "https://images.unsplash.com/photo-1621994153189-6223b41f7912"
-            },
-            {
-                "title": "Mediterranean Quinoa Bowl",
-                "ingredients": "• 1 cup quinoa, rinsed\n• 2 cups vegetable broth\n• 1 (15 oz) can chickpeas, drained and rinsed\n• 2 cups cherry tomatoes, halved\n• 1 cucumber, diced\n• 1/2 red onion, finely chopped\n• 1/2 cup kalamata olives, pitted\n• 1/2 cup feta cheese, crumbled\n• 1/4 cup fresh parsley, chopped\nDressing:\n• 3 tbsp olive oil\n• 2 tbsp lemon juice\n• 2 cloves garlic, minced\n• 1 tsp dried oregano\n• Salt and pepper to taste",
-                "preparation_time": "30 minutes",
-                "instructions": "1. Rinse quinoa thoroughly in fine mesh strainer\n2. Bring broth to boil in medium saucepan\n3. Add quinoa, reduce heat to low\n4. Cover and simmer 18-20 minutes\n5. Remove from heat, let stand 5 minutes\n6. Fluff with fork, let cool slightly\n7. Meanwhile, prepare vegetables:\n   - Halve tomatoes\n   - Dice cucumber into 1/2 inch pieces\n   - Finely chop onion\n   - Drain and rinse chickpeas\n8. Make dressing:\n   - Whisk olive oil, lemon juice, garlic\n   - Add oregano, salt, and pepper\n9. In large bowl, combine quinoa and vegetables\n10. Add olives and chickpeas\n11. Pour dressing over, toss gently\n12. Top with feta and parsley\n13. Serve at room temperature or chilled",
-                "image_file": "https://images.unsplash.com/photo-1543362906-acfc16c67564"
-            },
-            {
-                "title": "Garlic Bread",
-                "ingredients": "• 1 French baguette\n• 1/2 cup unsalted butter, softened\n• 4 cloves garlic, finely minced\n• 2 tbsp fresh parsley, finely chopped\n• 1/4 cup freshly grated Parmesan cheese\n• 1/4 tsp salt\n• 1/8 tsp black pepper\n• 1/4 tsp Italian seasoning (optional)\n• Pinch of red pepper flakes (optional)",
-                "preparation_time": "20 minutes",
-                "instructions": "1. Preheat oven to 400°F (200°C)\n2. Cut baguette in half lengthwise\n3. In a bowl, mix softened butter until creamy\n4. Add minced garlic, mix well\n5. Stir in parsley, Parmesan, salt, and pepper\n6. Add Italian seasoning and red pepper if using\n7. Spread mixture evenly on both bread halves\n8. Place on baking sheet, cut sides up\n9. Bake 10-12 minutes until edges are golden\n10. Optional: broil 1-2 minutes for extra crispiness\n11. Let cool 2-3 minutes\n12. Slice diagonally into 2-inch pieces\n13. Serve immediately while warm",
-                "image_file": "https://images.unsplash.com/photo-1608198093002-ad4e005484ec"
-            },
-            {
-                "title": "Lemon Garlic Shrimp",
-                "ingredients": "• 1 lb large shrimp (16-20 count), peeled and deveined\n• 4 cloves garlic, minced\n• 1 lemon, juiced and zested\n• 4 tbsp unsalted butter\n• 2 tbsp olive oil\n• 1/4 cup dry white wine\n• 1/4 cup fresh parsley, chopped\n• 1/2 tsp salt\n• 1/4 tsp black pepper\n• 1/4 tsp red pepper flakes (optional)\n• Extra lemon wedges for serving",
-                "preparation_time": "20 minutes",
-                "instructions": "1. Pat shrimp completely dry with paper towels\n2. Season shrimp with salt and pepper\n3. Heat olive oil and 2 tbsp butter in large skillet over medium-high\n4. Add garlic, cook 30 seconds until fragrant\n5. Add shrimp in single layer (don't crowd)\n6. Cook 2-3 minutes until bottom side is pink\n7. Flip each shrimp, cook 1-2 minutes more\n8. Remove shrimp to a plate\n9. Add wine to pan, simmer 2 minutes\n10. Add lemon juice and zest\n11. Stir in remaining butter until melted\n12. Return shrimp to pan\n13. Add parsley and red pepper flakes if using\n14. Toss until shrimp is coated and heated through\n15. Serve immediately with lemon wedges\n16. Optional: serve over pasta or rice",
-                "image_file": "https://images.unsplash.com/photo-1559742811-822873691df8"
-            }
-        ]
-
-        for recipe_data in recipes:
-            recipe = Recipe(
-                title=recipe_data["title"],
-                ingredients=recipe_data["ingredients"],
-                preparation_time=recipe_data["preparation_time"],
-                instructions=recipe_data["instructions"],
-                image_file=recipe_data["image_file"],
-                user_id=official.id
-            )
-            db.session.add(recipe)
-        
-        db.session.commit()
-        return "Official account and recipes created/updated!"
+            return "Recipe times updated successfully!"
+            
+        return "Official account not found"
     except Exception as e:
         return f"Error: {str(e)}"
 
