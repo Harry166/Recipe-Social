@@ -1,44 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Top Recipes</h2>
-<div class="row mb-4" id="top-recipes-container">
-    {% for recipe in top_recipes %}
-    <div class="col-md-4">
-        <div class="card">
-            <div class="position-relative">
-                <i class="fas fa-star position-absolute top-0 start-0 m-2 text-warning"></i>
-                {% if recipe.image_file != 'default.jpg' %}
-                    <img src="{{ recipe.image_file }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
-                {% else %}
-                    <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
-                        <span class="text-muted">No thumbnail available</span>
-                    </div>
-                {% endif %}
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">{{ recipe.title }}</h5>
-                <p class="card-text small">
-                    <i class="fas fa-clock"></i> {{ recipe.preparation_time }} minutes |
-                    <i class="fas fa-eye"></i> {{ recipe.views }} views |
-                    <i class="fas fa-calendar"></i> {{ recipe.date_posted.strftime('%B %d, %Y') }} |
-                    <span class="like-button" data-recipe-id="{{ recipe.id }}">
-                        {% if current_user.is_authenticated and current_user.has_liked_recipe(recipe) %}
-                            <i class="fas fa-heart text-danger"></i>
-                        {% else %}
-                            <i class="far fa-heart"></i>
-                        {% endif %}
-                    </span>
-                    <span class="likes-count">{{ recipe.liked_by.count() }}</span>
-                </p>
-                <a href="{{ url_for('recipe', recipe_id=recipe.id) }}" class="btn btn-primary">View Recipe</a>
+{% if not mood %}  {# Only show top recipes when no mood is selected #}
+    <h2>Top Recipes</h2>
+    <div class="row mb-4" id="top-recipes-container">
+        {% for recipe in top_recipes %}
+        <div class="col-md-4">
+            <div class="card">
+                <div class="position-relative">
+                    <i class="fas fa-star position-absolute top-0 start-0 m-2 text-warning"></i>
+                    {% if recipe.image_file != 'default.jpg' %}
+                        <img src="{{ recipe.image_file }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top d-flex align-items-center justify-content-center bg-light" style="height: 200px;">
+                            <span class="text-muted">No thumbnail available</span>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ recipe.title }}</h5>
+                    <p class="card-text small">
+                        <i class="fas fa-clock"></i> {{ recipe.preparation_time }} minutes |
+                        <i class="fas fa-eye"></i> {{ recipe.views }} views |
+                        <i class="fas fa-calendar"></i> {{ recipe.date_posted.strftime('%B %d, %Y') }} |
+                        <span class="like-button" data-recipe-id="{{ recipe.id }}">
+                            {% if current_user.is_authenticated and current_user.has_liked_recipe(recipe) %}
+                                <i class="fas fa-heart text-danger"></i>
+                            {% else %}
+                                <i class="far fa-heart"></i>
+                            {% endif %}
+                        </span>
+                        <span class="likes-count">{{ recipe.liked_by.count() }}</span>
+                    </p>
+                    <a href="{{ url_for('recipe', recipe_id=recipe.id) }}" class="btn btn-primary">View Recipe</a>
+                </div>
             </div>
         </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
+{% endif %}
 
-<h2>All Recipes</h2>
+<h2>{% if mood %}{{ mood|title }} Recipes{% else %}All Recipes{% endif %}</h2>
 <div class="row" id="all-recipes-container">
     {% for recipe in all_recipes %}
     <div class="col-md-4 mb-4">
