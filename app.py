@@ -548,6 +548,39 @@ def get_mood_recipes():
 def sources():
     return render_template('sources.html')
 
+@app.route("/create_recipe", methods=['GET', 'POST'])
+@login_required
+def create_recipe():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        ingredients = request.form.get('ingredients')
+        instructions = request.form.get('instructions')
+        preparation_time = request.form.get('preparation_time')
+        
+        # Handle image upload
+        image_file = request.files.get('image')
+        if image_file:
+            # Save the image and get the filename
+            image_filename = save_picture(image_file)
+        else:
+            image_filename = 'default.jpg'
+            
+        recipe = Recipe(
+            title=title,
+            ingredients=ingredients,
+            instructions=instructions,
+            preparation_time=preparation_time,
+            author=current_user,
+            image_file=image_filename
+        )
+        
+        db.session.add(recipe)
+        db.session.commit()
+        flash('Your recipe has been created!', 'success')
+        return redirect(url_for('home'))
+        
+    return render_template('create_recipe.html', title='New Recipe')
+
 # Configure Cloudinary
 cloudinary.config( 
     cloud_name = "dxxxzdjmv",
