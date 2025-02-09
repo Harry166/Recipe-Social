@@ -544,6 +544,10 @@ def get_mood_recipes():
         print(f"Error in get_mood_recipes: {str(e)}")
         return jsonify({'error': str(e)}), 500
 
+@app.route("/sources")
+def sources():
+    return render_template('sources.html')
+
 # Configure Cloudinary
 cloudinary.config( 
     cloud_name = "dxxxzdjmv",
