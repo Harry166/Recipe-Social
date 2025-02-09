@@ -148,30 +148,48 @@ MOOD_MAPPINGS = {
 }
 
 def get_recipe_recommendations(mood, recipes, num_recommendations=5):
-    # Create a string representation of each recipe
-    recipe_texts = []
-    for recipe in recipes:
-        text = f"{recipe.title} {recipe.ingredients} {recipe.instructions}"
-        recipe_texts.append(text.lower())
-    
-    # Create mood text from mapping
-    mood_keywords = " ".join(MOOD_MAPPINGS.get(mood, []))
-    
-    # Add mood text to the documents
-    all_texts = recipe_texts + [mood_keywords]
-    
-    # Create TF-IDF vectors
-    vectorizer = TfidfVectorizer(stop_words='english')
-    tfidf_matrix = vectorizer.fit_transform(all_texts)
-    
-    # Calculate similarity between mood and recipes
-    mood_vector = tfidf_matrix[-1]
-    recipe_vectors = tfidf_matrix[:-1]
-    similarities = cosine_similarity(recipe_vectors, mood_vector)
-    
-    # Get top recommendations
-    top_indices = similarities.flatten().argsort()[-num_recommendations:][::-1]
-    return [recipes[i] for i in top_indices]
+    # If no recipes or no mood, return all recipes
+    if not recipes or not mood:
+        return recipes
+        
+    try:
+        # Create a string representation of each recipe
+        recipe_texts = []
+        for recipe in recipes:
+            text = f"{recipe.title} {recipe.ingredients} {recipe.instructions}"
+            recipe_texts.append(text.lower())
+        
+        # If no recipe texts, return all recipes
+        if not recipe_texts:
+            return recipes
+            
+        # Create mood text from mapping
+        mood_keywords = " ".join(MOOD_MAPPINGS.get(mood, []))
+        if not mood_keywords:  # If mood not found in mappings
+            return recipes
+            
+        # Add mood text to the documents
+        all_texts = recipe_texts + [mood_keywords]
+        
+        # Create TF-IDF vectors
+        vectorizer = TfidfVectorizer(stop_words='english')
+        tfidf_matrix = vectorizer.fit_transform(all_texts)
+        
+        # Calculate similarity between mood and recipes
+        mood_vector = tfidf_matrix[-1]
+        recipe_vectors = tfidf_matrix[:-1]
+        similarities = cosine_similarity(recipe_vectors, mood_vector)
+        
+        # Get top recommendations
+        top_indices = similarities.flatten().argsort()[-num_recommendations:][::-1]
+        recommended = [recipes[i] for i in top_indices]
+        
+        # If no recommendations found, return all recipes
+        return recommended if recommended else recipes
+        
+    except Exception as e:
+        print(f"Error in recommendations: {str(e)}")
+        return recipes  # Return all recipes on error
 
 @app.route('/')
 def home():
@@ -452,15 +470,15 @@ def create_test_recipe():
 def get_mood_recipes():
     try:
         mood = request.form.get('mood')
+        print(f"Selected mood: {mood}")  # Debug print
+        
         all_recipes = Recipe.query.all()
+        print(f"Found {len(all_recipes)} recipes in database")  # Debug print
         
-        # Check if we have any recipes
-        if not all_recipes:
-            return jsonify([])  # Return empty list if no recipes
-            
         recommended_recipes = get_recipe_recommendations(mood, all_recipes)
+        print(f"Got {len(recommended_recipes)} recommended recipes")  # Debug print
         
-        return jsonify([{
+        recipes_json = [{
             'id': recipe.id,
             'title': recipe.title,
             'image_file': recipe.image_file,
@@ -469,10 +487,13 @@ def get_mood_recipes():
             'has_been_top': recipe.has_been_top,
             'date_posted': recipe.date_posted.strftime('%B %d, %Y'),
             'likes': len(recipe.liked_by.all())
-        } for recipe in recommended_recipes])
+        } for recipe in recommended_recipes]
+        
+        print(f"Returning {len(recipes_json)} recipes as JSON")  # Debug print
+        return jsonify(recipes_json)
     except Exception as e:
         print(f"Error in get_mood_recipes: {str(e)}")
-        return jsonify([])  # Return empty list on error
+        return jsonify([])
 
 @app.route("/sources")
 def sources():
