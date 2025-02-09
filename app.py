@@ -421,7 +421,7 @@ def setup_official_content():
             {
                 "title": "Classic Homemade Pizza",
                 "ingredients": "• 2 1/4 cups bread flour\n• 1 1/2 tsp instant yeast\n• 1 1/2 tsp salt\n• 1 cup warm water (110°F)\n• 2 tbsp olive oil\n• 1 cup pizza sauce\n• 2 cups mozzarella cheese, shredded\n• 1/4 cup fresh basil leaves\n• Optional toppings: pepperoni, mushrooms, bell peppers",
-                "preparation_time": "1 hour 30 minutes",
+                "preparation_time": "90 minutes",
                 "instructions": "1. In a large bowl, combine flour, yeast, and salt\n2. Add warm water and olive oil, mix until a shaggy dough forms\n3. Knead dough for 10 minutes until smooth and elastic\n4. Place in oiled bowl, cover with damp cloth\n5. Let rise in warm place for 1 hour or until doubled\n6. Preheat oven to 450°F with pizza stone if available\n7. Punch down dough and roll into 14-inch circle\n8. Transfer to parchment paper or cornmeal-dusted pan\n9. Spread sauce evenly, leaving 1/2 inch border\n10. Top with cheese and desired toppings\n11. Bake 12-15 minutes until crust is golden\n12. Garnish with fresh basil\n13. Let cool 5 minutes before slicing",
                 "image_file": "https://images.unsplash.com/photo-1513104890138-7c749659a591"
             },
@@ -456,7 +456,7 @@ def setup_official_content():
             {
                 "title": "Banana Bread",
                 "ingredients": "• 3 very ripe bananas, mashed\n• 1/3 cup unsalted butter, melted\n• 1/2 cup granulated sugar\n• 1 large egg, room temperature\n• 1 tsp vanilla extract\n• 1 tsp baking soda\n• 1/4 tsp salt\n• 1 1/2 cups all-purpose flour\n• 1/4 tsp ground cinnamon\n• 1/2 cup chopped walnuts (optional)\n• 1/4 cup chocolate chips (optional)",
-                "preparation_time": "1 hour 15 minutes",
+                "preparation_time": "75 minutes",
                 "instructions": "1. Preheat oven to 350°F (175°C)\n2. Grease a 4x8-inch loaf pan, line with parchment\n3. Mash bananas thoroughly in large bowl until no large chunks remain\n4. Mix in melted butter until completely combined\n5. Stir in sugar, beaten egg, and vanilla until well blended\n6. Sprinkle baking soda and salt over mixture\n7. Add cinnamon and stir to combine\n8. Fold in flour gently, mixing just until no dry streaks remain\n9. Fold in nuts and/or chocolate chips if using\n10. Pour batter into prepared pan, smooth top\n11. Bake 50-60 minutes until toothpick comes out clean\n12. Cool in pan 10 minutes on wire rack\n13. Remove from pan and cool completely\n14. Store wrapped tightly at room temperature",
                 "image_file": "https://images.unsplash.com/photo-1621994153189-6223b41f7912"
             },
@@ -554,10 +554,10 @@ def create_recipe():
     try:
         if request.method == 'POST':
             title = request.form.get('title')
-            # Get all ingredients and join them with newlines
             ingredients = '\n'.join(request.form.getlist('ingredients[]'))
             instructions = request.form.get('instructions')
-            preparation_time = request.form.get('preparation_time')
+            # Add "minutes" to preparation time
+            preparation_time = f"{request.form.get('preparation_time')} minutes"
             
             # Handle image upload
             image_file = request.files.get('image')

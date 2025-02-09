@@ -21,14 +21,14 @@
                     <a href="{{ url_for('profile', username=recipe.author.username) }}" 
                        class="text-decoration-none">
                         {% if recipe.author.profile_pic != 'default_profile.jpg' %}
-                            <img src="{{ url_for('static', filename='uploads/profiles/' + recipe.author.profile_pic) }}" 
+                            <img src="{{ recipe.author.profile_pic }}" 
                                  class="rounded-circle" style="width: 25px; height: 25px; object-fit: cover;">
                         {% else %}
                             <i class="fas fa-user-circle" style="font-size: 25px;"></i>
                         {% endif %}
                         {{ recipe.author.username }}
                     </a> |
-                    <i class="fas fa-clock"></i> {{ recipe.preparation_time }} mins |
+                    <i class="fas fa-clock"></i> {{ recipe.preparation_time }} |
                     <i class="fas fa-eye"></i> {{ recipe.views }} views |
                     <i class="fas fa-calendar"></i> {{ recipe.date_posted.strftime('%B %d, %Y') }}
                 </p>
