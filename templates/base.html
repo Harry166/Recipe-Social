@@ -407,12 +407,6 @@
     document.getElementById('moodSelect').addEventListener('change', function() {
         const mood = this.value;
         if (mood) {
-            // Hide top recipes section
-            const topRecipesSection = document.querySelector('h2:first-of-type').parentElement;
-            if (topRecipesSection) {
-                topRecipesSection.style.display = 'none';
-            }
-            
             fetch('/get_mood_recipes', {
                 method: 'POST',
                 headers: {
@@ -453,7 +447,6 @@
                 console.error('Error:', error);
             });
         } else {
-            // Show top recipes section and reload page
             window.location.reload();
         }
     });
