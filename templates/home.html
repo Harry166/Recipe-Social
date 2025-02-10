@@ -40,7 +40,26 @@
     </div>
 {% endif %}
 
-<h2>{% if mood %}{{ mood|title }} Recipes{% else %}All Recipes{% endif %}</h2>
+<h2>
+    {% if mood %}
+        {{ mood|title }} Recipes 
+        {% if mood == "Happy" %}
+            <span class="text-accent">Hooray 🎉!!! Here are your bright and fresh recipes!</span>
+        {% elif mood == "Sad" %}
+            <span class="text-accent">Here are some comforting recipes to lift your spirits! 🤗</span>
+        {% elif mood == "Energetic" %}
+            <span class="text-accent">Let's keep that energy up with these healthy recipes! 💪</span>
+        {% elif mood == "Tired" %}
+            <span class="text-accent">Quick and easy recipes coming right up! 😴</span>
+        {% elif mood == "Stressed" %}
+            <span class="text-accent">Time to relax with these soothing recipes! 😌</span>
+        {% elif mood == "Adventurous" %}
+            <span class="text-accent">Get ready for a flavor adventure! 🌎</span>
+        {% endif %}
+    {% else %}
+        All Recipes
+    {% endif %}
+</h2>
 <div class="row" id="all-recipes-container">
     {% for recipe in all_recipes %}
     <div class="col-md-4 mb-4">
