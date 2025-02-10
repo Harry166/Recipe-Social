@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from datetime import datetime, timedelta
@@ -544,6 +544,17 @@ def save_picture(picture_file):
     except Exception as e:
         print(f"Upload error: {str(e)}")
         return 'default.jpg'
+
+@app.route("/recipe/<int:recipe_id>/delete", methods=['POST'])
+@login_required
+def delete_recipe(recipe_id):
+    recipe = Recipe.query.get_or_404(recipe_id)
+    if recipe.author != current_user:
+        abort(403)
+    db.session.delete(recipe)
+    db.session.commit()
+    flash('Your recipe has been deleted!', 'success')
+    return redirect(url_for('home'))
 
 # Configure Cloudinary
 cloudinary.config( 
