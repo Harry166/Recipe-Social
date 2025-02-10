@@ -1,47 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-8 offset-md-2">
-        <h2>Create New Recipe</h2>
-        <form method="POST" enctype="multipart/form-data" id="recipeForm">
-            <div class="mb-3">
-                <label for="title" class="form-label">Recipe Title</label>
-                <input type="text" class="form-control" id="title" name="title" required>
-            </div>
-            
-            <div class="mb-3">
-                <label class="form-label">Ingredients</label>
-                <div id="ingredientsList">
-                    <div class="input-group mb-2">
-                        <input type="text" class="form-control ingredient-input" 
-                               name="ingredients[]" placeholder="Enter an ingredient" required>
-                        <button type="button" class="btn btn-danger remove-ingredient" 
-                                style="display: none;">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-secondary" id="addIngredient">
-                    <i class="fas fa-plus"></i> Add Another Ingredient
-                </button>
-            </div>
-
-            <div class="mb-3">
-                <label for="preparation_time" class="form-label">Preparation Time (in minutes)</label>
-                <input type="number" class="form-control" id="preparation_time" 
-                       name="preparation_time" placeholder="e.g., 30" min="1" required>
-                <div class="form-text text-muted">Enter the total preparation time in minutes</div>
-            </div>
-
-            <div class="mb-3">
-                <label for="instructions" class="form-label">Instructions</label>
-                <textarea class="form-control" id="instructions" name="instructions" 
-                          rows="5" required></textarea>
-            </div>
-
+<div class="content-section">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">New Recipe</legend>
             <div class="form-group mb-3">
-                <label for="image_file" class="form-label">Recipe Image URL</label>
+                {{ form.title.label(class="form-control-label") }}
+                {{ form.title(class="form-control") }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form.ingredients.label(class="form-control-label") }}
+                {{ form.ingredients(class="form-control") }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form.instructions.label(class="form-control-label") }}
+                {{ form.instructions(class="form-control") }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form.preparation_time.label(class="form-control-label") }}
+                {{ form.preparation_time(class="form-control") }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form.image_file.label(class="form-control-label") }}
                 <div class="alert alert-info" role="alert">
                     <h5>📸 How to add an image:</h5>
                     <ol>
@@ -54,49 +36,12 @@
                     </ol>
                     <p class="mb-0"><strong>⚠️ Important:</strong> Only Unsplash image links are allowed for licensing reasons.</p>
                 </div>
-                <input type="text" class="form-control" id="image_file" name="image_file" placeholder="Paste Unsplash image URL here">
+                {{ form.image_file(class="form-control") }}
             </div>
-
-            <button type="submit" class="btn btn-primary">Create Recipe</button>
-        </form>
-    </div>
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-primary" type="submit">Create Recipe</button>
+        </div>
+    </form>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const ingredientsList = document.getElementById('ingredientsList');
-    const addButton = document.getElementById('addIngredient');
-
-    function updateRemoveButtons() {
-        const removeButtons = document.querySelectorAll('.remove-ingredient');
-        removeButtons.forEach(button => {
-            button.style.display = ingredientsList.children.length > 1 ? 'block' : 'none';
-        });
-    }
-
-    function createIngredientInput() {
-        const div = document.createElement('div');
-        div.className = 'input-group mb-2';
-        div.innerHTML = `
-            <input type="text" class="form-control ingredient-input" 
-                   name="ingredients[]" placeholder="Enter an ingredient" required>
-            <button type="button" class="btn btn-danger remove-ingredient">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-
-        div.querySelector('.remove-ingredient').addEventListener('click', function() {
-            div.remove();
-            updateRemoveButtons();
-        });
-
-        return div;
-    }
-
-    addButton.addEventListener('click', function() {
-        ingredientsList.appendChild(createIngredientInput());
-        updateRemoveButtons();
-    });
-});
-</script>
-{% endblock %}
+{% endblock content %}

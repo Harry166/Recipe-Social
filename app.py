@@ -515,7 +515,10 @@ def validate_image_url(form, field):
         raise ValidationError('Please use only Unsplash image URLs. Go to unsplash.com to find images.')
 
 class RecipeForm(FlaskForm):
-    # ... other fields ...
+    title = StringField('Title', validators=[DataRequired()])
+    ingredients = StringField('Ingredients', validators=[DataRequired()])
+    instructions = StringField('Instructions', validators=[DataRequired()])
+    preparation_time = StringField('Preparation Time', validators=[DataRequired()])
     image_file = StringField('Recipe Image URL', 
                            validators=[DataRequired(), validate_image_url],
                            render_kw={"placeholder": "Paste Unsplash image URL here"})
