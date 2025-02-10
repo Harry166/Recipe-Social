@@ -23,7 +23,7 @@
                 {{ form.preparation_time(class="form-control") }}
             </div>
             <div class="form-group mb-3">
-                {{ form.image_file.label(class="form-control-label") }}
+                <label for="image_url">Recipe Image URL</label>
                 <div class="alert alert-info" role="alert">
                     <h5>📸 How to add an image:</h5>
                     <ol>
@@ -36,7 +36,17 @@
                     </ol>
                     <p class="mb-0"><strong>⚠️ Important:</strong> Only Unsplash image links are allowed for licensing reasons.</p>
                 </div>
-                {{ form.image_file(class="form-control") }}
+                <input type="text" class="form-control" id="image_url" name="image_url" placeholder="Paste Unsplash image URL here">
+            </div>
+            <div class="form-group mb-3">
+                <label for="ingredients">Ingredients</label>
+                <div id="ingredients-container">
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" name="ingredients[]" required>
+                        <button type="button" class="btn btn-danger remove-ingredient">Remove</button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-secondary" id="add-ingredient">Add Ingredient</button>
             </div>
         </fieldset>
         <div class="form-group">

@@ -257,31 +257,47 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('home'))
 
-@app.route("/recipe/new", methods=['GET', 'POST'])
+@app.route("/create_recipe", methods=['GET', 'POST'])
 @login_required
 def create_recipe():
-    form = RecipeForm()
-    if form.validate_on_submit():
-        # Convert Unsplash share URL to direct image URL
-        image_url = form.image_file.data
-        if '/photos/' in image_url:
-            # Extract photo ID and create direct download URL
-            photo_id = image_url.split('/photos/')[1].split('/')[0]
-            image_url = f"https://unsplash.com/photos/{photo_id}/download?force=true"
-        
-        recipe = Recipe(
-            title=form.title.data,
-            ingredients=form.ingredients.data,
-            instructions=form.instructions.data,
-            preparation_time=form.preparation_time.data,
-            image_file=image_url,
-            author=current_user
-        )
-        db.session.add(recipe)
-        db.session.commit()
-        flash('Your recipe has been created!', 'success')
+    try:
+        if request.method == 'POST':
+            title = request.form.get('title')
+            ingredients = '\n'.join(request.form.getlist('ingredients[]'))
+            instructions = request.form.get('instructions')
+            time_value = request.form.get('preparation_time')
+            preparation_time = f"{time_value} minutes" if not time_value.endswith('minutes') else time_value
+            
+            # Handle Unsplash image URL
+            image_url = request.form.get('image_url')
+            if image_url and 'unsplash.com' in image_url:
+                # Convert share URL to direct download URL if needed
+                if '/photos/' in image_url:
+                    photo_id = image_url.split('/photos/')[1].split('/')[0]
+                    image_url = f"https://unsplash.com/photos/{photo_id}/download?force=true"
+            else:
+                image_url = 'https://images.unsplash.com/photo-1495521821757-a1efb6729352'  # Default image
+                
+            recipe = Recipe(
+                title=title,
+                ingredients=ingredients,
+                instructions=instructions,
+                preparation_time=preparation_time,
+                author=current_user,
+                image_file=image_url
+            )
+            
+            db.session.add(recipe)
+            db.session.commit()
+            flash('Your recipe has been created!', 'success')
+            return redirect(url_for('home'))
+            
+        return render_template('create_recipe.html', title='New Recipe')
+    except Exception as e:
+        print(f"Error in create_recipe: {str(e)}")
+        db.session.rollback()
+        flash('An error occurred while creating the recipe.', 'danger')
         return redirect(url_for('home'))
-    return render_template('create_recipe.html', title='New Recipe', form=form)
 
 @app.route('/recipe/<int:recipe_id>')
 def recipe(recipe_id):
