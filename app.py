@@ -257,22 +257,24 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('home'))
 
-@app.route('/recipe/new', methods=['GET', 'POST'])
+@app.route("/recipe/new", methods=['GET', 'POST'])
 @login_required
 def create_recipe():
     form = RecipeForm()
     if form.validate_on_submit():
         # Convert Unsplash share URL to direct image URL
         image_url = form.image_file.data
-        if 'unsplash.com/photos/' in image_url:
-            image_url = f"{image_url}/download?force=true"
+        if '/photos/' in image_url:
+            # Extract photo ID and create direct download URL
+            photo_id = image_url.split('/photos/')[1].split('/')[0]
+            image_url = f"https://unsplash.com/photos/{photo_id}/download?force=true"
         
         recipe = Recipe(
             title=form.title.data,
             ingredients=form.ingredients.data,
             instructions=form.instructions.data,
             preparation_time=form.preparation_time.data,
-            image_file=image_url,  # Use the direct download URL
+            image_file=image_url,
             author=current_user
         )
         db.session.add(recipe)
