@@ -259,34 +259,22 @@ def logout():
 
 @app.route('/recipe/new', methods=['GET', 'POST'])
 @login_required
-def new_recipe():
-    if request.method == 'POST':
-        try:
-            file = request.files['image']
-            image_url = 'default.jpg'
-            
-            if file and file.filename != '':
-                # Upload directly to Cloudinary
-                result = cloudinary.uploader.upload(file)
-                image_url = result['secure_url']
-            
-            recipe = Recipe(
-                title=request.form['title'],
-                ingredients=request.form['ingredients'],
-                preparation_time=request.form['preparation_time'],
-                instructions=request.form['instructions'],
-                image_file=image_url,
-                author=current_user
-            )
-            db.session.add(recipe)
-            db.session.commit()
-            return redirect(url_for('home'))
-        except Exception as e:
-            print(f"Recipe creation error: {str(e)}")
-            flash('Error creating recipe', 'danger')
-            return render_template('create_recipe.html')
-            
-    return render_template('create_recipe.html')
+def create_recipe():
+    form = RecipeForm()
+    if form.validate_on_submit():
+        recipe = Recipe(
+            title=form.title.data,
+            ingredients=form.ingredients.data,
+            instructions=form.instructions.data,
+            preparation_time=form.preparation_time.data,
+            image_file=form.image_file.data,  # Save the URL directly
+            author=current_user
+        )
+        db.session.add(recipe)
+        db.session.commit()
+        flash('Your recipe has been created!', 'success')
+        return redirect(url_for('home'))
+    return render_template('create_recipe.html', title='New Recipe', form=form)
 
 @app.route('/recipe/<int:recipe_id>')
 def recipe(recipe_id):

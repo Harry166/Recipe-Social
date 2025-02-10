@@ -5,16 +5,9 @@
     <div class="col-md-8 offset-md-2">
         <div class="card">
             <!-- For the full recipe view -->
-            {% if recipe.image_file %}
-                <img src="{{ recipe.image_file }}" alt="{{ recipe.title }}" 
-                     class="card-img-top w-100" 
-                     style="height: 300px; width: 100%; object-fit: cover;">
-            {% else %}
-                <div class="card-img-top d-flex align-items-center justify-content-center bg-light" 
-                     style="height: 300px;">
-                    <i class="fas fa-image text-muted" style="font-size: 48px;"></i>
-                </div>
-            {% endif %}
+            <div class="recipe-image">
+                <img src="{{ recipe.image_file }}" class="img-fluid rounded" alt="{{ recipe.title }}">
+            </div>
             <div class="card-body">
                 <div class="recipe-header">
                     <h2>{{ recipe.title }}</h2>
