@@ -268,6 +268,16 @@
         .container {
             margin-bottom: 35px;
         }
+
+        .mood-message {
+            font-size: 0.9rem;
+            margin-left: 10px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -419,23 +429,23 @@
                 const allRecipesContainer = document.getElementById('all-recipes-container');
                 if (allRecipesContainer) {
                     // Update the heading first
-                    const heading = document.querySelector('h2');
+                    const heading = document.querySelector('h2:last-of-type');
                     if (heading) {
                         let moodText = '';
                         const currentMood = this.value;  // Get mood directly from select
                         
                         if (currentMood === 'Happy') {
-                            moodText = `Bright & Fresh Recipes <span class="text-accent">Hooray 🎉!!! Here are your bright and fresh recipes!</span>`;
+                            moodText = `Bright & Fresh Recipes <span class="mood-message">Hooray 🎉!!! Here are your bright and fresh recipes!</span>`;
                         } else if (currentMood === 'Sad') {
-                            moodText = `Comfort Food Recipes <span class="text-accent">Here are some comforting recipes to warm your soul! 🤗</span>`;
+                            moodText = `Comfort Food Recipes <span class="mood-message">Here are some comforting recipes to warm your soul! 🤗</span>`;
                         } else if (currentMood === 'Energetic') {
-                            moodText = `Healthy & Light Recipes <span class="text-accent">Let's keep that energy up with these nutritious recipes! 💪</span>`;
+                            moodText = `Healthy & Light Recipes <span class="mood-message">Let's keep that energy up with these nutritious recipes! 💪</span>`;
                         } else if (currentMood === 'Tired') {
-                            moodText = `Quick & Easy Recipes <span class="text-accent">Easy recipes that won't tire you out! 😴</span>`;
+                            moodText = `Quick & Easy Recipes <span class="mood-message">Easy recipes that won't tire you out! 😴</span>`;
                         } else if (currentMood === 'Stressed') {
-                            moodText = `Soothing & Warm Recipes <span class="text-accent">Time to relax with these comforting recipes! 😌</span>`;
+                            moodText = `Soothing & Warm Recipes <span class="mood-message">Time to relax with these comforting recipes! 😌</span>`;
                         } else if (currentMood === 'Adventurous') {
-                            moodText = `Bold & Spicy Recipes <span class="text-accent">Get ready for an exciting flavor adventure! 🌎</span>`;
+                            moodText = `Bold & Spicy Recipes <span class="mood-message">Get ready for an exciting flavor adventure! 🌎</span>`;
                         }
                         
                         heading.innerHTML = moodText;

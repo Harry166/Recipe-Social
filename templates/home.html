@@ -41,22 +41,21 @@
 {% endif %}
 
 <h2>
+    All Recipes
     {% if mood %}
         {% if mood == "Happy" %}
-            Bright & Fresh Recipes <span style="color: black;">Hooray 🎉!!! Here are your bright and fresh recipes!</span>
+            <span class="mood-message">Hooray 🎉!!! Here are your bright and fresh recipes!</span>
         {% elif mood == "Sad" %}
-            Comfort Food Recipes <span style="color: black;">Here are some comforting recipes to warm your soul! 🤗</span>
+            <span class="mood-message">Here are some comforting recipes to warm your soul! 🤗</span>
         {% elif mood == "Energetic" %}
-            Healthy & Light Recipes <span style="color: black;">Let's keep that energy up with these nutritious recipes! 💪</span>
+            <span class="mood-message">Let's keep that energy up with these nutritious recipes! 💪</span>
         {% elif mood == "Tired" %}
-            Quick & Easy Recipes <span style="color: black;">Easy recipes that won't tire you out! 😴</span>
+            <span class="mood-message">Easy recipes that won't tire you out! 😴</span>
         {% elif mood == "Stressed" %}
-            Soothing & Warm Recipes <span style="color: black;">Time to relax with these comforting recipes! 😌</span>
+            <span class="mood-message">Time to relax with these comforting recipes! 😌</span>
         {% elif mood == "Adventurous" %}
-            Bold & Spicy Recipes <span style="color: black;">Get ready for an exciting flavor adventure! 🌎</span>
+            <span class="mood-message">Get ready for an exciting flavor adventure! 🌎</span>
         {% endif %}
-    {% else %}
-        All Recipes <span style="color: black;">Pick a mood to get personalized recipe recommendations! 😊</span>
     {% endif %}
 </h2>
 <div class="row" id="all-recipes-container">
