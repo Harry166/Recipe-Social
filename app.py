@@ -487,55 +487,6 @@ def get_mood_recipes():
 def sources():
     return render_template('sources.html')
 
-@app.route("/create_recipe", methods=['GET', 'POST'])
-@login_required
-def create_recipe():
-    try:
-        if request.method == 'POST':
-            title = request.form.get('title')
-            ingredients = '\n'.join(request.form.getlist('ingredients[]'))
-            instructions = request.form.get('instructions')
-            # Get the time value and ensure it includes "minutes"
-            time_value = request.form.get('preparation_time')
-            preparation_time = f"{time_value} minutes" if not time_value.endswith('minutes') else time_value
-            
-            # Handle image upload
-            image_file = request.files.get('image')
-            if image_file:
-                image_filename = save_picture(image_file)
-            else:
-                image_filename = 'default.jpg'
-                
-            recipe = Recipe(
-                title=title,
-                ingredients=ingredients,
-                instructions=instructions,
-                preparation_time=preparation_time,
-                author=current_user,
-                image_file=image_filename
-            )
-            
-            db.session.add(recipe)
-            db.session.commit()
-            flash('Your recipe has been created!', 'success')
-            return redirect(url_for('home'))
-            
-        return render_template('create_recipe.html', title='New Recipe')
-    except Exception as e:
-        print(f"Error in create_recipe: {str(e)}")
-        db.session.rollback()
-        flash('An error occurred while creating the recipe.', 'danger')
-        return redirect(url_for('home'))
-
-def save_picture(picture_file):
-    try:
-        # Upload to Cloudinary
-        result = cloudinary.uploader.upload(picture_file)
-        return result['secure_url']
-    except Exception as e:
-        print(f"Upload error: {str(e)}")
-        return 'default.jpg'
-
 @app.route("/recipe/<int:recipe_id>/delete", methods=['POST'])
 @login_required
 def delete_recipe(recipe_id):
