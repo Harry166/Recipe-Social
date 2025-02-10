@@ -470,14 +470,11 @@ def create_test_recipe():
 def get_mood_recipes():
     try:
         mood = request.form.get('mood')
-        print(f"Selected mood: {mood}")  # Debug print
-        
         all_recipes = Recipe.query.all()
-        print(f"Found {len(all_recipes)} recipes in database")  # Debug print
         
         recommended_recipes = get_recipe_recommendations(mood, all_recipes)
-        print(f"Got {len(recommended_recipes)} recommended recipes")  # Debug print
         
+        # Add mood to each recipe JSON object
         recipes_json = [{
             'id': recipe.id,
             'title': recipe.title,
@@ -486,10 +483,10 @@ def get_mood_recipes():
             'views': recipe.views,
             'has_been_top': recipe.has_been_top,
             'date_posted': recipe.date_posted.strftime('%B %d, %Y'),
-            'likes': len(recipe.liked_by.all())
+            'likes': len(recipe.liked_by.all()),
+            'mood': mood  # Add the mood here
         } for recipe in recommended_recipes]
         
-        print(f"Returning {len(recipes_json)} recipes as JSON")  # Debug print
         return jsonify(recipes_json)
     except Exception as e:
         print(f"Error in get_mood_recipes: {str(e)}")
