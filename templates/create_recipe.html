@@ -40,9 +40,21 @@
                           rows="5" required></textarea>
             </div>
 
-            <div class="mb-3">
-                <label for="image" class="form-label">Recipe Image</label>
-                <input type="file" class="form-control" id="image" name="image">
+            <div class="form-group mb-3">
+                <label for="image_file" class="form-label">Recipe Image URL</label>
+                <div class="alert alert-info" role="alert">
+                    <h5>📸 How to add an image:</h5>
+                    <ol>
+                        <li>Go to <a href="https://unsplash.com" target="_blank">Unsplash.com</a></li>
+                        <li>Find a photo you like</li>
+                        <li>Click on the photo to open it</li>
+                        <li>Click the "Share" button</li>
+                        <li>Copy the URL from the "Copy link" field</li>
+                        <li>Paste the URL here</li>
+                    </ol>
+                    <p class="mb-0"><strong>⚠️ Important:</strong> Only Unsplash image links are allowed for licensing reasons.</p>
+                </div>
+                <input type="text" class="form-control" id="image_file" name="image_file" placeholder="Paste Unsplash image URL here">
             </div>
 
             <button type="submit" class="btn btn-primary">Create Recipe</button>

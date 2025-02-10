@@ -13,6 +13,9 @@ import cloudinary.api
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired, ValidationError
 
 # Near the top of your file, after imports
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -562,6 +565,16 @@ cloudinary.config(
     api_key = "992923442213286", 
     api_secret = "iMGp_riYsXFsfcaldx3bZdCHC4g"
 )
+
+def validate_image_url(form, field):
+    if not field.data.startswith('https://unsplash.com/'):
+        raise ValidationError('Please use only Unsplash image URLs. Go to unsplash.com to find images.')
+
+class RecipeForm(FlaskForm):
+    # ... other fields ...
+    image_file = StringField('Recipe Image URL', 
+                           validators=[DataRequired(), validate_image_url],
+                           render_kw={"placeholder": "Paste Unsplash image URL here"})
 
 if __name__ == '__main__' or os.environ.get('RENDER'):  # Add the RENDER check
     with app.app_context():
