@@ -127,7 +127,7 @@ class Recipe(db.Model):
     ingredients = db.Column(db.Text, nullable=False)
     preparation_time = db.Column(db.String(50), nullable=False)
     instructions = db.Column(db.Text, nullable=False)
-    image_file = db.Column(db.String(100), nullable=False, default='default.jpg')
+    image_file = db.Column(db.String(500), nullable=False, default='https://images.unsplash.com/photo-1495521821757-a1efb6729352')
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     views = db.Column(db.Integer, default=0)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -262,12 +262,17 @@ def logout():
 def create_recipe():
     form = RecipeForm()
     if form.validate_on_submit():
+        # Convert Unsplash share URL to direct image URL
+        image_url = form.image_file.data
+        if 'unsplash.com/photos/' in image_url:
+            image_url = f"{image_url}/download?force=true"
+        
         recipe = Recipe(
             title=form.title.data,
             ingredients=form.ingredients.data,
             instructions=form.instructions.data,
             preparation_time=form.preparation_time.data,
-            image_file=form.image_file.data,  # Save the URL directly
+            image_file=image_url,  # Use the direct download URL
             author=current_user
         )
         db.session.add(recipe)
